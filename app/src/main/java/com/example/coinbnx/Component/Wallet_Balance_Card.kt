@@ -136,6 +136,7 @@ fun WalletCard(
                         contentColor = MaterialTheme.colorScheme.onBackground  // Set text color for contrast
                     ),
                     shape = RoundedCornerShape(12.dp),
+                    elevation = ButtonDefaults.buttonElevation(25.dp)
                 ) {
                     Text(
                         text = "Add",
