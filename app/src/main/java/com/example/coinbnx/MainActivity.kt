@@ -141,7 +141,7 @@ fun HomeScreen(
             // Button Row
             Row(
                 modifier = Modifier.fillMaxWidth()
-                    .padding(start = 24.dp, end = 24.dp),
+                    .padding(start = 24.dp, end = 24.dp, top = 16.dp),
                 horizontalArrangement = Arrangement.SpaceAround,
                 verticalAlignment = Alignment.CenterVertically
             ) {

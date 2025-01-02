@@ -53,7 +53,7 @@ fun Coins_Box(
 
     Box(
         modifier = modifier
-            .height(60.dp) // Increased height for better visibility
+            .height(65.dp)
             .fillMaxWidth()
             .clip(RoundedCornerShape(16.dp)) // Rounded corners for aesthetic
     ) {

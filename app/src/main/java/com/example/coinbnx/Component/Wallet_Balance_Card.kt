@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowUpward
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -66,8 +67,8 @@ fun WalletCard(
         Box(
             modifier = Modifier
                 .matchParentSize()
-                .blur(10.dp)  // Applying blur effect
-                .background(Color.Black.copy(alpha = 0.2f))  // Semi-transparent dark overlay for better contrast
+                .blur(18.dp)  // Applying blur effect
+                .background(MaterialTheme.colorScheme.onBackground.copy(0.2f))  // Semi-transparent dark overlay for better contrast
                 .clip(RoundedCornerShape(10.dp))
         )
 
@@ -89,7 +90,7 @@ fun WalletCard(
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
                     text = "Current Balance",
-                    color = MaterialTheme.colorScheme.onBackground,
+                    color = MaterialTheme.colorScheme.background,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Light,
                 )
@@ -99,7 +100,7 @@ fun WalletCard(
                 ) {
                     Text(
                         text ="$${balance}",
-                        color = MaterialTheme.colorScheme.onBackground,
+                        color = MaterialTheme.colorScheme.background,
                         fontSize = 24.sp,
                         fontWeight = FontWeight.ExtraBold,
                     )
@@ -122,33 +123,25 @@ fun WalletCard(
                 }
                 Spacer(modifier = Modifier.height(8.dp))
                 }
-                Spacer(modifier = Modifier.width(8.dp))
+                Spacer(modifier = Modifier.width(16.dp))
                 Button(
                     onClick = {
                         // Handle button click
                     },
-                    modifier = Modifier
-                        .height(40.dp)  // Use a slightly taller height for better usability
-                        .width(155.dp)  // Adjust width to accommodate text properly
+                    modifier = Modifier // Adjust width to accommodate text properly
                         .padding(horizontal = 16.dp), // Optional: Add padding inside button for better touch targets
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.onBackground,  // Set the background color
-                        contentColor = MaterialTheme.colorScheme.background  // Set text color for contrast
+                        containerColor = MaterialTheme.colorScheme.background,  // Set the background color
+                        contentColor = MaterialTheme.colorScheme.onBackground  // Set text color for contrast
                     ),
                     shape = RoundedCornerShape(12.dp),
                     elevation = ButtonDefaults.buttonElevation(25.dp)
                 ) {
-                    Text(
-                        text = "Add",
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Medium,
-                        modifier = Modifier
+                    Icon(
+                        imageVector = Icons.Default.Add,
+                        contentDescription = null,
                     )
                 }
-
-
-
-
             }
         }
     }
