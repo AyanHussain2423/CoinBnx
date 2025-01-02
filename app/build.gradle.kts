@@ -2,6 +2,9 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+
+    id("kotlin-kapt")
+    id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -36,6 +39,7 @@ android {
     }
     buildFeatures {
         compose = true
+
     }
 }
 
@@ -59,4 +63,31 @@ dependencies {
 
     implementation(libs.androidx.material.icons.extended)
     implementation(libs.haze)
+
+    // Hilt - Dependency Injection
+    implementation ("com.google.dagger:hilt-android:2.52")
+    kapt ("com.google.dagger:hilt-compiler:2.52")
+
+    // Coroutines
+    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.1") // Check for the latest version
+
+    // Retrofit - Networking
+    implementation ("com.squareup.retrofit2:retrofit:2.9.0")  // Check for the latest version
+    implementation ("com.squareup.retrofit2:converter-gson:2.9.0")  // If you are using Gson for JSON parsing
+    implementation ("com.squareup.retrofit2:adapter-rxjava2:2.9.0") // If using RxJava, but optional for coroutines
+
+    // ViewModel & LiveData
+    implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.0")  // Latest version
+    implementation ("androidx.lifecycle:lifecycle-livedata-ktx:2.6.0")
+
+    //navigattion
+    implementation ("androidx.navigation:navigation-compose:2.6.0")
+    implementation ("androidx.hilt:hilt-navigation-compose:1.0.0")
+
+    implementation ("io.coil-kt:coil-compose:2.1.0") // Coil for Compose
+    implementation ("io.coil-kt:coil-svg:2.1.0") // Coil extension to load SVG
+}
+
+kapt{
+    correctErrorTypes= true
 }

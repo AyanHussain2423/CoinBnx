@@ -66,8 +66,8 @@ fun WalletCard(
         Box(
             modifier = Modifier
                 .matchParentSize()
-                .blur(20.dp)  // Applying blur effect
-                .background(Color.Black.copy(alpha = 0.4f))  // Semi-transparent dark overlay for better contrast
+                .blur(10.dp)  // Applying blur effect
+                .background(Color.Black.copy(alpha = 0.2f))  // Semi-transparent dark overlay for better contrast
                 .clip(RoundedCornerShape(10.dp))
         )
 
@@ -89,7 +89,7 @@ fun WalletCard(
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
                     text = "Current Balance",
-                    color = Color.Black,
+                    color = MaterialTheme.colorScheme.onBackground,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Light,
                 )
@@ -99,7 +99,7 @@ fun WalletCard(
                 ) {
                     Text(
                         text ="$${balance}",
-                        color = Color.Black,
+                        color = MaterialTheme.colorScheme.onBackground,
                         fontSize = 24.sp,
                         fontWeight = FontWeight.ExtraBold,
                     )
@@ -109,12 +109,12 @@ fun WalletCard(
                         contentDescription = null,
                         modifier = Modifier
                             .size(20.dp),
-                        tint = Color.Blue
+                        tint = Color.Green
                     )
                     Spacer(modifier = Modifier.width(2.dp))
                     Text(
                         text ="${profit_loss_percentage} %",
-                        color = Color.Blue,
+                        color = Color.Green,
                         fontSize = 14.sp,
                         fontWeight = FontWeight.ExtraBold,
                         modifier = Modifier.offset(y=1.dp)
@@ -132,8 +132,8 @@ fun WalletCard(
                         .width(155.dp)  // Adjust width to accommodate text properly
                         .padding(horizontal = 16.dp), // Optional: Add padding inside button for better touch targets
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.background,  // Set the background color
-                        contentColor = MaterialTheme.colorScheme.onBackground  // Set text color for contrast
+                        containerColor = MaterialTheme.colorScheme.onBackground,  // Set the background color
+                        contentColor = MaterialTheme.colorScheme.background  // Set text color for contrast
                     ),
                     shape = RoundedCornerShape(12.dp),
                     elevation = ButtonDefaults.buttonElevation(25.dp)

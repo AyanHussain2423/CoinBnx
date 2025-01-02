@@ -27,24 +27,32 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.coinbnx.Api.CoinApiService
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.coinbnx.Api.CoinApi
 import com.example.coinbnx.Component.BottomBar
 import com.example.coinbnx.Component.Button_Btn
 import com.example.coinbnx.Component.Coins_Box
 import com.example.coinbnx.Component.TopBar
 import com.example.coinbnx.Component.WalletCard
+import com.example.coinbnx.data.CoinX
+import com.example.coinbnx.data.coin
+import com.example.coinbnx.repository.CoinViewModel
 
 import com.example.coinbnx.ui.theme.CoinBnxTheme
 import com.example.coinbnx.ui.theme.blue
 import dagger.hilt.android.AndroidEntryPoint
+
 import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.HazeStyle
 import dev.chrisbanes.haze.hazeChild
@@ -52,22 +60,20 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     @Inject
-    lateinit var newonehaha : CoinApiService
-
+    lateinit var coinApi: CoinApi
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         GlobalScope.launch{
-            var response = newonehaha.getCoins()
-            Log.d("haha", response.body().toString())
+            val response = coinApi.getCoins()
+            Log.d("response", response.body().toString())
         }
-
-
         enableEdgeToEdge()
         setContent {
             CoinBnxTheme {
@@ -111,7 +117,11 @@ fun HomeScreen(
     modifier: Modifier = Modifier,
     hazeState: HazeState,
     paddingValues: PaddingValues,
+    coinViewModel: CoinViewModel = hiltViewModel()
+
 ) {
+    val coins : State<List<CoinX>> = coinViewModel.coins.collectAsState(initial = emptyList())
+    Log.d("helo",coins.value.toString())
     Box(
         modifier = modifier.fillMaxHeight()
     ) {
@@ -158,7 +168,7 @@ fun HomeScreen(
             // Popular Crypto Text
             Row(
                 modifier = Modifier.fillMaxWidth()
-                    .padding(start = 36.dp, top = 8.dp)
+                    .padding(start = 24.dp, top = 4.dp)
             ) {
                 Text(
                     text = "Popular Crypto",
@@ -168,13 +178,28 @@ fun HomeScreen(
                     modifier = Modifier
                 )
             }
+            Spacer(modifier = Modifier.height(16.dp))
+            LazyColumn {
+                items(count = minOf(coins.value.size, 6)) { index -> // Limit to the first 6 items
+                    Coins_Box(
+                        modifier = Modifier.padding(start = 20.dp, end = 20.dp, bottom = 4.dp, top = 4.dp),
+                        Coin_Name = coins.value[index].name,
+                        Coin_Price = coins.value[index].price.take(6),
+                        Coin_Color = coins.value[index].color,
+                        Coin_Symbal = coins.value[index].symbol,
+                        Coin_Change = coins.value[index].change,
+                        imageUrl = coins.value[index].iconUrl
+                    )
+                }
+            }
         }
+        Spacer(modifier = Modifier.height(16.dp))
         BottomBar(
             modifier = Modifier
+                .padding(bottom = 20.dp, start = 22.dp, end = 22.dp)
+                .clip(RoundedCornerShape(28.dp))
                 .fillMaxWidth()
-                .padding(30.dp)
-                .padding(bottom = 16.dp)
-                .align(alignment = Alignment.BottomEnd)
+                .align(alignment = Alignment.BottomStart)
         )
     }
 }

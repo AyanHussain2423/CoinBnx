@@ -5,13 +5,18 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.LibraryBooks
 import androidx.compose.material.icons.rounded.AccountBox
+import androidx.compose.material.icons.rounded.AttachMoney
+import androidx.compose.material.icons.rounded.CreditCard
+import androidx.compose.material.icons.rounded.EditRoad
 import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material3.Icon
@@ -28,62 +33,52 @@ import com.example.coinbnx.ui.theme.Blur
 
 @Composable
 fun BottomBar(modifier: Modifier = Modifier) {
-
-
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .blur(20.dp)  // Applying blur effect
-            .background(MaterialTheme.colorScheme.onBackground.copy(alpha = 0.4f))  // Semi-transparent dark overlay for better contrast
-            .clip(RoundedCornerShape(10.dp))
-    )
-
-    // Content Layer (Text)
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(10.dp),
-    )
-    Row(
-        modifier = modifier
-            .clip(RoundedCornerShape(26.dp))
-            .padding(vertical = 14.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceAround
+            .background(MaterialTheme.colorScheme.onBackground)
     ) {
-        bottomBarItems.forEach {
-            if (it.isSelected) {
-                Box(
-                    modifier = Modifier
-                        .size(38.dp)
-                        .border(
-                            width = 1.dp,
-                            color = Color.White,
-                            shape = RoundedCornerShape(14.dp)
+        // Content Layer (Text or icons)
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 14.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceAround
+        ) {
+            bottomBarItems.forEach {
+                if (it.isSelected) {
+                    Box(
+                        modifier = Modifier
+                            .size(38.dp)
+                            .border(
+                                width = 1.dp,
+                                color = MaterialTheme.colorScheme.background,
+                                shape = RoundedCornerShape(14.dp)
+                            )
+                            .clip(RoundedCornerShape(14.dp))
+                            .background(Blur), // Blur effect for selected items
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            imageVector = it.icon,
+                            contentDescription = it.title,
+                            tint = MaterialTheme.colorScheme.background,
+                            modifier = Modifier.size(24.dp)
                         )
-                        .clip(RoundedCornerShape(14.dp))
-                        .background(Blur),
-                    contentAlignment = Alignment.Center
-                ) {
+                    }
+                } else {
                     Icon(
                         imageVector = it.icon,
                         contentDescription = it.title,
-                        tint = Color.White,
-                        modifier = Modifier.size(28.dp)
+                        tint = MaterialTheme.colorScheme.background,
+                        modifier = Modifier.size(24.dp)
                     )
                 }
-            } else {
-                Icon(
-                    imageVector = it.icon,
-                    contentDescription = it.title,
-                    tint = Color.White,
-                    modifier = Modifier.size(28.dp)
-                )
             }
         }
     }
 }
-
 
 data class BottomBarItem(
     val title: String,
@@ -98,18 +93,18 @@ val bottomBarItems = listOf(
         isSelected = false
     ),
     BottomBarItem(
-        title = "Account",
-        icon = Icons.Rounded.AccountBox,
+        title = "Invest",
+        icon = Icons.Rounded.AttachMoney,
         isSelected = true
     ),
     BottomBarItem(
-        title = "Analytics",
-        icon = Icons.AutoMirrored.Rounded.LibraryBooks,
+        title = "Futures",
+        icon = Icons.Rounded.EditRoad,
         isSelected = false
     ),
     BottomBarItem(
-        title = "Settings",
-        icon = Icons.Rounded.Settings,
+        title = "Portfolio",
+        icon = Icons.Rounded.CreditCard,
         isSelected = false
     ),
 )
