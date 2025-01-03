@@ -34,110 +34,137 @@ fun WalletCard(
     balance: String,
     profit_loss_percentage: String
 ) {
-    // Use Card instead of Box for elevation and shadow
-    Card(
+    Box(
         modifier = modifier
             .height(200.dp)
             .fillMaxWidth()
             .clip(RoundedCornerShape(14.dp))
-            .border(0.1.dp, Color.White, RoundedCornerShape(14.dp)),
-        elevation = CardDefaults.cardElevation(16.dp),
+            .background(
+                Brush.linearGradient(
+                    colors = listOf(
+                        Color(0xFFFFFFFF),
+                        Color(0xFF8D8D8D),
+                        Color(0xFF1C1C1C)// Black
+                    ),
+                    start = Offset(0f, 0f),
+                    end = Offset(0f, 1f)
+                )
+            )
+            .padding(2.dp)
     ) {
-        Box(
+        Card(
             modifier = Modifier
                 .fillMaxSize()
-                .background(MaterialTheme.colorScheme.background)
+                .clip(RoundedCornerShape(14.dp)), // Ensure the Card's corners match the Box's
+            elevation = CardDefaults.cardElevation(24.dp),
         ) {
-            Image(
-                painter = painterResource(R.drawable.purpletrans),
-                contentDescription = null,
-                modifier = Modifier
-                    .matchParentSize(),
-                contentScale = ContentScale.Crop
-            )
-            Image(
-                painter = painterResource(R.drawable.orangetrans),
-                contentDescription = null,
-                modifier = Modifier
-                    .matchParentSize(),
-                contentScale = ContentScale.Crop
-            )
-            Row(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(start = 26.dp, top = 36.dp),
-                verticalAlignment = Alignment.CenterVertically
+            Box(
+                modifier = Modifier.fillMaxSize()
+                    .background(
+                        Brush.linearGradient(
+                            colors = listOf(
+                                Color(0xFFFFFFFF),
+                                Color(0xFF8D8D8D),
+                                Color(0xFF1C1C1C)
+                            ),
+                            start = Offset(0f, 0f),
+                            end = Offset(1f, 1f) // Diagonal gradient
+                        )
+                    )
             ) {
-                Column {
-                    Text(
-                        text = "Current Balance",
-                        fontWeight = FontWeight.Medium,
-                        fontSize = 16.sp,
-                        color = Color.White
-                    )
-                    Spacer(modifier = Modifier.height(2.dp))
-                    Text(
-                        text = "$${balance}",
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 35.sp,
-                        color = Color.White
-                    )
-                    Spacer(modifier = Modifier.fillMaxHeight(fraction = 0.4f))
-                    Row(
-                        modifier = Modifier.padding(bottom = 22.dp),
-                        horizontalArrangement = Arrangement.Center,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Image(
-                            painter = painterResource(R.drawable.profit),
-                            contentDescription = null,
-                            modifier = Modifier
-                                .width(18.dp)
-                                .height(18.dp)
-                        )
+                // Background Gradient
+                Image(
+                    painter = painterResource(R.drawable.purpletrans),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .matchParentSize(),
+                    contentScale = ContentScale.Crop
+                )
+                Image(
+                    painter = painterResource(R.drawable.orangetrans),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .matchParentSize(),
+                    contentScale = ContentScale.Crop
+                )
+                Row(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(start = 26.dp, top = 36.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Column {
                         Text(
-                            text = "${profit_loss_percentage}",
-                            fontWeight = FontWeight.Medium,
-                            fontSize = 16.sp,
-                            color = Color.Green,
-                            style = MaterialTheme.typography.bodyMedium.copy(
-                                shadow = Shadow(
-                                    color = Color.Black,
-                                    offset = Offset(2f, 2f), // Offset to create the stroke
-                                )
-                            )
-                        )
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text(
-                            text = "Today's Growth",
+                            text = "Current Balance",
                             fontWeight = FontWeight.Medium,
                             fontSize = 16.sp,
                             color = Color.White
                         )
+                        Spacer(modifier = Modifier.height(2.dp))
+                        Text(
+                            text = "$${balance}",
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 35.sp,
+                            color = Color.White
+                        )
+                        Spacer(modifier = Modifier.fillMaxHeight(fraction = 0.4f))
+                        Row(
+                            modifier = Modifier.padding(bottom = 22.dp),
+                            horizontalArrangement = Arrangement.Center,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Image(
+                                painter = painterResource(R.drawable.profit),
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .width(18.dp)
+                                    .height(18.dp)
+                            )
+                            Text(
+                                text = "${profit_loss_percentage}",
+                                fontWeight = FontWeight.Medium,
+                                fontSize = 16.sp,
+                                color = Color.Green,
+                                style = MaterialTheme.typography.bodyMedium.copy(
+                                    shadow = Shadow(
+                                        color = Color.Black,
+                                        offset = Offset(2f, 2f),
+                                    )
+                                )
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(
+                                text = "Today's Growth",
+                                fontWeight = FontWeight.Medium,
+                                fontSize = 16.sp,
+                                color = Color.White
+                            )
+                        }
                     }
-                }
-                Column {
-                    Image(
-                        painter = painterResource(R.drawable.bitcoinsecond),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .fillMaxHeight(0.4f)
-                            .fillMaxWidth(0.4f)
-                            .offset(y = -12.dp)
-                    )
-                    Image(
-                        painter = painterResource(R.drawable.bitcoinfirst),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .fillMaxHeight(0.9f)
-                            .fillMaxWidth(0.9f)
-                            .offset(y = -6.dp, x = 4.dp)
-                    )
+                    Column {
+                        Image(
+                            painter = painterResource(R.drawable.bitcoinsecond),
+                            contentDescription = null,
+                            modifier = Modifier
+                                .fillMaxHeight(0.4f)
+                                .fillMaxWidth(0.4f)
+                                .offset(y = -12.dp)
+                        )
+                        Image(
+                            painter = painterResource(R.drawable.bitcoinfirst),
+                            contentDescription = null,
+                            modifier = Modifier
+                                .fillMaxHeight(0.9f)
+                                .fillMaxWidth(0.9f)
+                                .offset(y = -6.dp, x = 4.dp)
+                        )
+                    }
                 }
             }
         }
     }
 }
+
 
 @Preview
 @Composable
