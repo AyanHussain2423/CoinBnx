@@ -69,7 +69,7 @@ fun Coins_Box(
         Box(
             modifier = Modifier
                 .matchParentSize()
-                .padding(8.dp), // Adjust padding here for internal spacing
+                .padding(6.dp), // Adjust padding here for internal spacing
             contentAlignment = Alignment.CenterStart
         ) {
             Row(

@@ -124,6 +124,7 @@ fun HomeScreen(
     Log.d("helo",coins.value.toString())
     Box(
         modifier = modifier.fillMaxHeight()
+            .background(MaterialTheme.colorScheme.background)
     ) {
         Column {
             Spacer(modifier = Modifier.height(8.dp))

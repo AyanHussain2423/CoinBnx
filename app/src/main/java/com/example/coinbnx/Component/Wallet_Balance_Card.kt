@@ -1,6 +1,7 @@
 package com.example.coinbnx.Component
 
 import android.R.attr.enabled
+import android.R.attr.strokeWidth
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -32,7 +33,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -50,96 +55,106 @@ fun WalletCard(
 ) {
     Box(
         modifier = modifier
-            .height(110.dp)
+            .height(200.dp)
+            .fillMaxHeight(fraction = 0.2f)
             .fillMaxWidth()
-            .clip(RoundedCornerShape(14.dp)),
-    ) {
-        // Background image (gradient)
+            .clip(RoundedCornerShape(14.dp))
+            .shadow(8.dp, shape = MaterialTheme.shapes.medium),
+    ){
         Image(
-            painter = painterResource(R.drawable.gradientimage),
+            painter = painterResource(R.drawable.purpletrans),
             contentDescription = null,
             modifier = Modifier
-                .fillMaxSize(),
-            contentScale = ContentScale.Crop
+                .matchParentSize()
+                .offset(x = -40.dp, y = 0.dp)
         )
-
-        // Semi-transparent overlay with blur effect
+        Image(
+            painter = painterResource(R.drawable.orangetrans),
+            contentDescription = null,
+            modifier = Modifier
+                .matchParentSize()
+                .offset(x = 30.dp)
+        )
         Box(
             modifier = Modifier
                 .matchParentSize()
-                .blur(18.dp)  // Applying blur effect
-                .background(MaterialTheme.colorScheme.onBackground.copy(0.2f))  // Semi-transparent dark overlay for better contrast
-                .clip(RoundedCornerShape(10.dp))
         )
-
-        // Content Layer (Text)
-        Box(
-            modifier = Modifier
-                .matchParentSize()
-                .padding(10.dp), // Adds padding around the content
-        ) {
+        {
             Row(
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Column(
                 modifier = Modifier
+                    .matchParentSize()
+                    .padding(start = 26.dp, top = 36.dp),
+                verticalAlignment = Alignment.CenterVertically
+            )
+            {
+                Column(modifier = Modifier
                     .fillMaxHeight()
-                    .padding(start = 20.dp),
-                verticalArrangement = Arrangement.Center,
-            ) {
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = "Current Balance",
-                    color = MaterialTheme.colorScheme.background,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Light,
-                )
-                Spacer(modifier = Modifier.weight(1f))
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text ="$${balance}",
-                        color = MaterialTheme.colorScheme.background,
-                        fontSize = 24.sp,
-                        fontWeight = FontWeight.ExtraBold,
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Icon(
-                        imageVector = Icons.Default.ArrowUpward,
-                        contentDescription = null,
-                        modifier = Modifier
-                            .size(20.dp),
-                        tint = Color.Green
-                    )
-                    Spacer(modifier = Modifier.width(2.dp))
+                        text = "Currrent Balance",
+                            fontWeight = FontWeight.Medium,
+                            fontSize = 16.sp,
+                            color = Color.White
+                        )
+                    Spacer(modifier = Modifier.height(2.dp))
                     Text(
-                        text ="${profit_loss_percentage} %",
-                        color = Color.Green,
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.ExtraBold,
-                        modifier = Modifier.offset(y=1.dp)
+                        text = "$${balance}",
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 35.sp,
+                        color = Color.White
                     )
+                    Spacer(modifier = Modifier.fillMaxHeight(fraction = 0.4f))
+                    Row (
+                        modifier = Modifier.padding(bottom = 22.dp),
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically
+                    ){
+                        Image(
+                            painter = painterResource(R.drawable.profit),
+                            contentDescription = null,
+                            modifier= Modifier
+                                .width(18.dp)
+                                .height(18.dp)
+                        )
+                        Text(
+                            text = "${profit_loss_percentage}",
+                            fontWeight = FontWeight.Medium,
+                            fontSize = 16.sp,
+                            color = Color.Green,
+                            style = MaterialTheme.typography.bodyMedium.copy(
+                                shadow = Shadow(
+                                    color = Color.Black,
+                                    offset = Offset(2f, 2f), // Offset to create the stroke
+                                )
+                            )
+
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(
+                            text = "Todays Growth",
+                            fontWeight = FontWeight.Medium,
+                            fontSize = 16.sp,
+                            color = Color.White
+                        )
+                    }
                 }
-                Spacer(modifier = Modifier.height(8.dp))
-                }
-                Spacer(modifier = Modifier.width(16.dp))
-                Button(
-                    onClick = {
-                        // Handle button click
-                    },
-                    modifier = Modifier // Adjust width to accommodate text properly
-                        .padding(horizontal = 16.dp), // Optional: Add padding inside button for better touch targets
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.background,  // Set the background color
-                        contentColor = MaterialTheme.colorScheme.onBackground  // Set text color for contrast
-                    ),
-                    shape = RoundedCornerShape(12.dp),
-                    elevation = ButtonDefaults.buttonElevation(25.dp)
+                Column(
                 ) {
-                    Icon(
-                        imageVector = Icons.Default.Add,
+                    Image(
+                        painter = painterResource(R.drawable.bitcoinsecond),
                         contentDescription = null,
+                        modifier= Modifier
+                            .fillMaxHeight(0.4f)
+                            .fillMaxWidth(0.4f)
+                            .offset(y= -12.dp)
+                    )
+                    Image(
+                        painter = painterResource(R.drawable.bitcoinfirst),
+                        contentDescription = null,
+                        modifier= Modifier
+                            .fillMaxHeight(0.9f)
+                            .fillMaxWidth(0.9f)
+                            .offset(y= -6.dp, x = 4.dp)
                     )
                 }
             }
