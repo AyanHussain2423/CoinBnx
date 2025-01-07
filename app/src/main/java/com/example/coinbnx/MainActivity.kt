@@ -1,5 +1,6 @@
 package com.example.coinbnx
 
+import AppNavigation
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -39,6 +40,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.coinbnx.Api.CoinApi
 import com.example.coinbnx.Component.BottomBar
 import com.example.coinbnx.Component.Button_Btn
@@ -64,16 +67,10 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    @Inject
-    lateinit var coinApi: CoinApi
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        GlobalScope.launch{
-            val response = coinApi.getCoins()
-            Log.d("response", response.body().toString())
-        }
         enableEdgeToEdge()
         setContent {
             CoinBnxTheme {
@@ -82,6 +79,7 @@ class MainActivity : ComponentActivity() {
                 val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(
                     state = rememberTopAppBarState()
                 )
+                val navController = rememberNavController()
 
                 Scaffold(
                     modifier = Modifier
@@ -100,12 +98,7 @@ class MainActivity : ComponentActivity() {
                     },
 
                 ){ innerPAdding ->
-
-                    HomeScreen(
-                        paddingValues = innerPAdding,
-                        hazeState = hazeState,
-                    )
-
+                    AppNavigation(navController = navController, paddingValues = innerPAdding)
                 }
             }
         }
@@ -115,9 +108,9 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
-    hazeState: HazeState,
+    navController: NavController,
     paddingValues: PaddingValues,
-    coinViewModel: CoinViewModel = hiltViewModel()
+    coinViewModel: CoinViewModel = hiltViewModel(),
 
 ) {
     val coins : State<List<CoinX>> = coinViewModel.coins.collectAsState(initial = emptyList())
@@ -183,13 +176,13 @@ fun HomeScreen(
             LazyColumn {
                 items(count = minOf(coins.value.size, 6)) { index -> // Limit to the first 6 items
                     Coins_Box(
-                        modifier = Modifier.padding(start = 20.dp, end = 20.dp, bottom = 4.dp, top = 4.dp),
-                        Coin_Name = coins.value[index].name,
-                        Coin_Price = coins.value[index].price.take(6),
-                        Coin_Color = coins.value[index].color,
-                        Coin_Symbal = coins.value[index].symbol,
-                        Coin_Change = coins.value[index].change,
-                        imageUrl = coins.value[index].iconUrl
+                        modifier = Modifier.padding(
+                            start = 20.dp,
+                            end = 20.dp,
+                            bottom = 4.dp,
+                            top = 4.dp
+                        ),
+                        coin = coins.value[index],
                     )
                 }
             }
@@ -200,7 +193,8 @@ fun HomeScreen(
                 .padding(bottom = 20.dp, start = 22.dp, end = 22.dp)
                 .clip(RoundedCornerShape(28.dp))
                 .fillMaxWidth()
-                .align(alignment = Alignment.BottomStart)
+                .align(alignment = Alignment.BottomStart),
+            navController = navController
         )
     }
 }

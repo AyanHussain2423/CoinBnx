@@ -3,6 +3,7 @@ package com.example.coinbnx.Component
 import android.graphics.Color as AndroidColor
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -28,25 +29,25 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import coil.decode.SvgDecoder
 import coil.request.ImageRequest
+import com.example.coinbnx.Pages.InvestScreen
+import com.example.coinbnx.data.CoinX
+import com.example.coinbnx.data.coin
 import com.example.coinbnx.ui.theme.CoinBnxTheme
 
 @Composable
 fun Coins_Box(
     modifier: Modifier = Modifier,
-    Coin_Name: String,
-    Coin_Price: String,
-    Coin_Color: String,
-    Coin_Symbal: String,
-    Coin_Change: String,
-    imageUrl: String? = null
+    coin: CoinX,
+
 ) {
     // Convert the hex color code to a Color
     val painter = rememberAsyncImagePainter(
         model = ImageRequest.Builder(context = LocalContext.current)
-            .data(imageUrl)
+            .data(coin.iconUrl)
             .decoderFactory(SvgDecoder.Factory())
             .build()
     )
@@ -55,7 +56,10 @@ fun Coins_Box(
         modifier = modifier
             .height(65.dp)
             .fillMaxWidth()
-            .clip(RoundedCornerShape(16.dp)) // Rounded corners for aesthetic
+            .clip(RoundedCornerShape(16.dp))
+            .clickable{
+
+            }
     ) {
         // Background Blur Effect
         Box(
@@ -78,7 +82,7 @@ fun Coins_Box(
                 horizontalArrangement = Arrangement.Start
             ) {
                 // Image Section
-                if (imageUrl != null) {
+                if (coin.iconUrl != null) {
                     Image(
                         painter = painter,
                         contentDescription = null,
@@ -98,14 +102,14 @@ fun Coins_Box(
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Text(
-                            text = Coin_Name,
+                            text = coin.name,
                             color = MaterialTheme.colorScheme.onBackground,
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Bold,
                             modifier = Modifier.weight(1f) // Ensures the name and price are spaced properly
                         )
                         Text(
-                            text = "$${Coin_Price}",
+                            text = "$${coin.price.take(6)}",
                             color = MaterialTheme.colorScheme.onBackground,
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Bold,
@@ -118,18 +122,18 @@ fun Coins_Box(
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Text(
-                            text = Coin_Symbal,
+                            text = coin.symbol,
                             color = MaterialTheme.colorScheme.onBackground,
                             fontSize = 12.sp,
                             fontWeight = FontWeight.Bold,
                         )
                         Spacer(modifier = Modifier.weight(1f)) // Space between symbol and change
 
-                        val coinValue = Coin_Change.toFloatOrNull() ?: 0f // Default to 0 if conversion fails
+                        val coinValue = coin.change.toFloatOrNull() ?: 0f // Default to 0 if conversion fails
                         val textColor = if (coinValue < 0) Color.Red else Color.Green
 
                         Text(
-                            text = "${Coin_Change} %",
+                            text = "${coin.change} %",
                             color = textColor,
                             fontSize = 12.sp,
                             fontWeight = FontWeight.Bold,
@@ -153,7 +157,7 @@ fun Coins_Box(
 
 fun Color.Companion.fromHex(hex: String): Color {
     return try {
-        Color(android.graphics.Color.parseColor(hex.trim()))
+        Color(AndroidColor.parseColor(hex.trim()))
     } catch (e: IllegalArgumentException) {
         Color(0xFF000000) // Default fallback color (black)
     }
@@ -163,12 +167,6 @@ fun Color.Companion.fromHex(hex: String): Color {
 @Composable
 fun preview() {
     CoinBnxTheme {
-        Coins_Box(
-            Coin_Name = "Bitcoin",
-            Coin_Price = "93000",
-            Coin_Color = "#3c3c3d",
-            Coin_Symbal = "BTC",
-            Coin_Change = "0.02"
-        )
+
     }
 }

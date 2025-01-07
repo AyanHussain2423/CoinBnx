@@ -14,7 +14,7 @@ data class CoinX(
     val name: String,
     val price: String,
     val rank: Int,
-    val sparkline: List<String>,
+    val sparkline: List<Float>,
     val symbol: String,
     val tier: Int,
     val uuid: String
