@@ -7,6 +7,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -30,6 +31,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.Navigation
 import coil.compose.rememberAsyncImagePainter
 import coil.decode.SvgDecoder
 import coil.request.ImageRequest
@@ -42,8 +44,10 @@ import com.example.coinbnx.ui.theme.CoinBnxTheme
 fun Coins_Box(
     modifier: Modifier = Modifier,
     coin: CoinX,
-
+    index: Int,
+    navController: NavController,
 ) {
+
     // Convert the hex color code to a Color
     val painter = rememberAsyncImagePainter(
         model = ImageRequest.Builder(context = LocalContext.current)
@@ -58,7 +62,7 @@ fun Coins_Box(
             .fillMaxWidth()
             .clip(RoundedCornerShape(16.dp))
             .clickable{
-
+                navController.navigate("invest/$index")
             }
     ) {
         // Background Blur Effect

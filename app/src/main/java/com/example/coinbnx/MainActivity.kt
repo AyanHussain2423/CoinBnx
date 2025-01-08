@@ -6,6 +6,7 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -66,11 +67,10 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        val coinViewModel: CoinViewModel by viewModels()
         enableEdgeToEdge()
         setContent {
             CoinBnxTheme {
@@ -81,6 +81,9 @@ class MainActivity : ComponentActivity() {
                 )
                 val navController = rememberNavController()
 
+                // Check if the current screen is the "InvestScreen"
+                val currentRoute = navController.currentBackStackEntry?.destination?.route
+
                 Scaffold(
                     modifier = Modifier
                         .fillMaxSize()
@@ -89,16 +92,21 @@ class MainActivity : ComponentActivity() {
                     containerColor = Color.Transparent,
                     topBar = {
                         Column() {
-                            TopBar(
-                                modifier = Modifier
-                                    .hazeChild(state = hazeState),
-                                scrollBehavior = scrollBehavior,
-                            )
+                                TopBar(
+                                    modifier = Modifier
+                                        .hazeChild(state = hazeState),
+                                    scrollBehavior = scrollBehavior,
+                                )
                         }
                     },
 
                 ){ innerPAdding ->
-                    AppNavigation(navController = navController, paddingValues = innerPAdding)
+                    val coins : State<List<CoinX>> = coinViewModel.coins.collectAsState(initial = emptyList())
+                    AppNavigation(
+                        navController = navController,
+                        paddingValues = innerPAdding,
+                        coinList = coins.value
+                    )
                 }
             }
         }
@@ -183,6 +191,8 @@ fun HomeScreen(
                             top = 4.dp
                         ),
                         coin = coins.value[index],
+                        index = index,  // Pass the index
+                        navController = navController,
                     )
                 }
             }

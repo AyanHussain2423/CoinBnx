@@ -18,24 +18,25 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
-import com.example.coinbnx.Component.Button_Btn
 import com.example.coinbnx.Component.SparklineChart
 import com.example.coinbnx.data.CoinX
-import com.example.coinbnx.ui.theme.CoinBnxTheme
-import com.example.coinbnx.ui.theme.blue
 
 @Composable
 fun InvestScreen(
     modifier: Modifier = Modifier,
-    coinX: CoinX
+    coinX: CoinX,
+    paddingValues: PaddingValues
 ) {
+    val changeValue = coinX.change.toFloatOrNull() ?: 0f
 
+    // Define the color based on whether the change is positive or negative
+    val changeColor = if (changeValue > 0) Color.Green else if (changeValue < 0) Color.Red else Color.Gray
     Box(
         modifier = modifier
-            .background(MaterialTheme.colorScheme.background)
             .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background)
+            .padding(paddingValues)
+
     ) {
         Column(
             modifier = Modifier.fillMaxWidth(),
@@ -44,20 +45,22 @@ fun InvestScreen(
         ) {
             Box(
                 modifier = Modifier
+                    .padding(10.dp)
                     .fillMaxWidth()
-                    .background(MaterialTheme.colorScheme.background.copy(0.6f))
-                    .padding(20.dp)
+                    .clip(RoundedCornerShape(18.dp))
+                    .background(MaterialTheme.colorScheme.onBackground.copy(0.1f))
             ){
                 Column {
-                    Row(
+                    Row( modifier = Modifier.fillMaxWidth().padding(20.dp),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.Center
                     ) {
                         Column(
-                            modifier = Modifier.padding(10.dp)
+                            modifier = Modifier
+                                .weight(1f)
                         ) {
                             Text(
-                                text = coinX.price,
+                                text = coinX.price.take(7),
                                 fontWeight = FontWeight.Medium,
                                 fontSize = 32.sp,
                                 color = MaterialTheme.colorScheme.onBackground
@@ -72,7 +75,7 @@ fun InvestScreen(
                         Box(
                             modifier = Modifier
                                 .clip(RoundedCornerShape(6.dp))
-                                .background(Color.Green)
+                                .background(changeColor)
                                 .padding(horizontal = 16.dp, vertical = 2.dp)
                                 .wrapContentWidth()
                         ) {
@@ -88,19 +91,131 @@ fun InvestScreen(
                     }
                     SparklineChart(
                         sparklineData = coinX.sparkline,
-                        lineColor = TODO(),
-                        backgroundColor = TODO()
+                        lineColor = changeColor,
+                        backgroundColor = Color.Transparent,
+                        change = coinX.change
                     )
+                }
+            }
+            Spacer(modifier = Modifier.height(8.dp))
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(10.dp)
+                    .clip(RoundedCornerShape(18.dp))
+                    .background(MaterialTheme.colorScheme.onBackground.copy(0.1f)),
+            ){
+                Column (
+                    modifier = Modifier.fillMaxWidth().padding(10.dp),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ){
+                    Text(
+                        text = "Coin Overview",
+                        fontWeight = FontWeight.Medium,
+                        fontSize = 24.sp,
+                        color = MaterialTheme.colorScheme.onBackground.copy(0.7f),
+                        modifier = Modifier.padding(10.dp)
+                    )
+                    Row(
+                        modifier = Modifier.fillMaxWidth().padding(6.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceEvenly
+                    ) {
+                        Text(
+                            text = "24 Volume:",
+                            fontWeight = FontWeight.Medium,
+                            fontSize = 10.sp,
+                            color = MaterialTheme.colorScheme.onBackground.copy(0.7f),
+                            modifier = Modifier.weight(1f)
+                        )
+                        Text(
+                            text = coinX.`24hVolume`,
+                            fontWeight = FontWeight.Medium,
+                            fontSize = 10.sp,
+                            color = MaterialTheme.colorScheme.onBackground,
+                            modifier = Modifier.weight(1f)
+                        )
+                        Text(
+                            text = "Marketcap:",
+                            fontWeight = FontWeight.Medium,
+                            fontSize = 10.sp,
+                            color = MaterialTheme.colorScheme.onBackground.copy(0.7f),
+                            modifier = Modifier.weight(1f)
+                        )
+                        Text(
+                            text =coinX.marketCap,
+                            fontWeight = FontWeight.Medium,
+                            fontSize = 10.sp,
+                            color = MaterialTheme.colorScheme.onBackground,
+                            modifier = Modifier.weight(1f)
+                        )
+                    }
+                    Row (
+                        modifier = Modifier.fillMaxWidth().padding(6.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceEvenly
+                    ){
+                        Text(
+                            text ="Tier Rank:",
+                            fontWeight = FontWeight.Medium,
+                            fontSize = 10.sp,
+                            color = MaterialTheme.colorScheme.onBackground.copy(0.7f),
+                            modifier = Modifier.weight(1f)
+                        )
+                        Text(
+                            text =coinX.tier.toString(),
+                            fontWeight = FontWeight.Medium,
+                            fontSize = 10.sp,
+                            color = MaterialTheme.colorScheme.onBackground,
+                            modifier = Modifier.weight(1f)
+                        )
+                        Text(
+                            text ="Coin Symbol:",
+                            fontWeight = FontWeight.Medium,
+                            fontSize = 10.sp,
+                            color = MaterialTheme.colorScheme.onBackground.copy(0.7f),
+                            modifier = Modifier.weight(1f)
+                        )
+                        Text(
+                            text =coinX.symbol,
+                            fontWeight = FontWeight.Medium,
+                            fontSize = 10.sp,
+                            color = MaterialTheme.colorScheme.onBackground,
+                            modifier = Modifier.weight(1f)
+                        )
+                    }
                 }
             }
         }
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun PreviewInvestScreen() {
-    CoinBnxTheme {
+    val sampleCoinX = CoinX(
+        symbol = "BTC",
+        price = "50,000.00",
+        change = "+5.23",
+        sparkline = listOf(50000f, 51000f, 52000f, 51500f, 53000f),
+        `24hVolume` = "2,000,000,000",
+        btcPrice = "50,000.00",
+        coinrankingUrl = "https://www.coinranking.com/coin/btc-bitcoin",
+        color = Color(0xFFf2a900).toString(), // Example color
+        contractAddresses = listOf("0x1234...", "0x5678..."),
+        iconUrl = "https://cryptologos.cc/logos/bitcoin-btc-logo.png",
+        listedAt = 20130428,
+        lowVolume = false,
+        marketCap = "900,000,000,000",
+        name = "Bitcoin",
+        rank = 1,
+        tier = 1,
+        uuid = "Qwsogvfrza",
+    )
 
-    }
+    InvestScreen(
+        coinX = sampleCoinX,
+        paddingValues = PaddingValues(20.dp)
+    )
 }

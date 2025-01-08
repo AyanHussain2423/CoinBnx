@@ -3,11 +3,14 @@ package com.example.coinbnx.Component
 import android.graphics.LinearGradient
 import android.graphics.Paint
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -17,9 +20,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.nativeCanvas
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.layout.onGloballyPositioned
-import dev.chrisbanes.haze.HazeProgressive
 import kotlin.math.floor
 
 @Composable
@@ -28,10 +31,12 @@ fun SparklineChart(
     sparklineData: List<Float>,
     lineColor: ComposeColor = MaterialTheme.colorScheme.primary,
     backgroundColor: ComposeColor = ComposeColor.Transparent,
+    change : String
 ) {
     var chartWidth by remember { mutableStateOf(0f) }
     var chartHeight by remember { mutableStateOf(0f) }
 
+    val lineColor = MaterialTheme.colorScheme.onBackground.copy(0.7f)
     val maxValue = sparklineData.maxOrNull() ?: 0f
     val minValue = sparklineData.minOrNull() ?: 0f
 
@@ -39,7 +44,15 @@ fun SparklineChart(
     val scaleX = chartWidth / (sparklineData.size - 1).toFloat()
     val scaleY = chartHeight / ((maxValue - minValue).takeIf { it != 0f } ?: 1f)
 
-    Column(modifier = modifier) {
+    val changeValue = change.toFloatOrNull() ?: 0f
+
+    // Define the color based on whether the change is positive or negative
+    val changeColor = if (changeValue > 0) Color.Green else if (changeValue < 0) Color.Red else Color.Gray
+
+    Column(
+        modifier = modifier
+            .padding(20.dp)
+    ) {
         Spacer(modifier = Modifier.height(16.dp)) // Add top padding
 
         Canvas(modifier = Modifier
@@ -56,18 +69,18 @@ fun SparklineChart(
 
             // Draw the vertical Y-axis (left side)
             drawLine(
-                color = ComposeColor.Black.copy(0.2f),
+                color = lineColor.copy(alpha = 0.4f),
                 start = Offset(0f, 0f),  // Start at top
                 end = Offset(0f, chartHeight),  // End at bottom
-                strokeWidth = 2f
+                strokeWidth = 1.5f
             )
 
             // Draw the horizontal X-axis (bottom)
             drawLine(
-                color = ComposeColor.Transparent,
+                color = lineColor.copy(alpha = 0.4f),
                 start = Offset(0f, chartHeight),  // Start at the bottom (left side)
                 end = Offset(chartWidth, chartHeight),  // End at the bottom (right side)
-                strokeWidth = 2f
+                strokeWidth = 1.5f
             )
 
             // Draw Y-axis labels (price)
@@ -76,16 +89,29 @@ fun SparklineChart(
                 val yPosition = chartHeight - (label - minValue) * scaleY
                 drawContext.canvas.nativeCanvas.apply {
                     drawText(
-                        String.format("%.2f", label),  // Displaying Y value (price)
-                        10f,  // X position (slightly left from the line)
+                        String.format("%.2f", label),
+                        10f,
                         yPosition,  // Y position
-                        android.graphics.Paint().apply {
-                            color = android.graphics.Color.BLACK
-                            textSize = 20f
+                        Paint().apply {
+                            color = lineColor.toArgb()
+                            textSize = 18f
                             isAntiAlias = true
+                            textAlign = Paint.Align.RIGHT
                         }
                     )
                 }
+            }
+
+            // Draw horizontal grid lines for better readability
+            val gridLines = listOf(maxValue, (maxValue + minValue) / 2, minValue)
+            gridLines.forEach { gridValue ->
+                val yPosition = chartHeight - (gridValue - minValue) * scaleY
+                drawLine(
+                    color = lineColor.copy(alpha = 0.2f),
+                    start = Offset(0f, yPosition),
+                    end = Offset(chartWidth, yPosition),
+                    strokeWidth = 1f
+                )
             }
 
             // Create a path for the line chart with curves
@@ -106,21 +132,9 @@ fun SparklineChart(
                 }
             }
 
-            // Fill the area under the path with the hint of green
-            drawPath(path = path, brush = Brush.linearGradient(
-                colors = listOf(
-                    Color(0xFF00CB6A),
-                    Color(0xFF00CB6A).copy(0.2f),
-                ),
-                start = Offset(100f, 100f),
-                end = Offset(100f, 600f) // Diagonal gradient
-            )
-            )
-
             // Draw the sparkline (line) on top of the filled area
-            drawPath(path = path, color = lineColor, style = Stroke(width = 5f))
+            drawPath(path = path, color = changeColor, style = Stroke(width = 3f))
 
-            // **Removed the X-axis labels (numbers)** as per your request
         }
 
         Spacer(modifier = Modifier.height(16.dp)) // Add bottom padding
@@ -145,6 +159,7 @@ fun PreviewSparklineChart() {
             .fillMaxWidth()
             .height(250.dp)
             .padding(16.dp),
-        lineColor = ComposeColor.Green
+        lineColor = ComposeColor(0xFF64B5F6),
+        change = "64B5F6"
     )
 }
