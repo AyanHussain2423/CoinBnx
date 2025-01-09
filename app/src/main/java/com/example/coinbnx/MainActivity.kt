@@ -42,6 +42,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.coinbnx.Api.CoinApi
 import com.example.coinbnx.Component.BottomBar
@@ -82,7 +83,7 @@ class MainActivity : ComponentActivity() {
                 val navController = rememberNavController()
 
                 // Check if the current screen is the "InvestScreen"
-                val currentRoute = navController.currentBackStackEntry?.destination?.route
+                val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
 
                 Scaffold(
                     modifier = Modifier
@@ -91,22 +92,24 @@ class MainActivity : ComponentActivity() {
                         .background(MaterialTheme.colorScheme.background),
                     containerColor = Color.Transparent,
                     topBar = {
-                        Column() {
-                                TopBar(
-                                    modifier = Modifier
-                                        .hazeChild(state = hazeState),
-                                    scrollBehavior = scrollBehavior,
-                                )
+                        if (currentRoute == "home") { // Only show TopBar on HomeScreen
+                            TopBar(
+                                modifier = Modifier
+                                    .hazeChild(state = hazeState),
+                                scrollBehavior = scrollBehavior,
+                            )
                         }
                     },
                     bottomBar = {
-                        BottomBar(
-                            modifier = Modifier
-                                .padding(bottom = 10.dp)
-                                .clip(RoundedCornerShape(28.dp))
-                                .fillMaxWidth(),
-                            navController = navController
-                        )
+                        if (currentRoute == "home" || currentRoute == "invest_page") { // Only show BottomBar on HomeScreen
+                            BottomBar(
+                                modifier = Modifier
+                                    .padding(bottom = 10.dp)
+                                    .clip(RoundedCornerShape(28.dp))
+                                    .fillMaxWidth(),
+                                navController = navController
+                            )
+                        }
                     }
 
                 ){ innerPAdding ->
