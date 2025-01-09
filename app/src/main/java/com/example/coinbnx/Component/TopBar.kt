@@ -44,7 +44,7 @@ fun TopBar(
         title = {
             Row(
                 modifier = Modifier
-                    .height(60.dp),
+                    .height(40.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {

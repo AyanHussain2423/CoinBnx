@@ -116,7 +116,7 @@ fun InvestScreen(
                     .background(MaterialTheme.colorScheme.onBackground.copy(0.1f)),
             ){
                 Column (
-                    modifier = Modifier.fillMaxWidth().padding(10.dp),
+                    modifier = Modifier.fillMaxWidth().padding(8.dp),
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ){
@@ -125,10 +125,10 @@ fun InvestScreen(
                         fontWeight = FontWeight.Normal,
                         fontSize = 24.sp,
                         color = MaterialTheme.colorScheme.onBackground.copy(0.7f),
-                        modifier = Modifier.fillMaxWidth().padding(top = 16.dp, bottom= 10.dp)
+                        modifier = Modifier.fillMaxWidth().padding(top = 4.dp, bottom= 4.dp)
                     )
                     Row(
-                        modifier = Modifier.fillMaxWidth().padding(6.dp),
+                        modifier = Modifier.fillMaxWidth().padding(4.dp),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceEvenly
                     ) {
@@ -162,7 +162,7 @@ fun InvestScreen(
                         )
                     }
                     Row (
-                        modifier = Modifier.fillMaxWidth().padding(6.dp),
+                        modifier = Modifier.fillMaxWidth().padding(4.dp),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceEvenly
                     ){
@@ -196,7 +196,7 @@ fun InvestScreen(
                         )
                     }
                     Row (
-                        modifier = Modifier.fillMaxWidth().padding(6.dp),
+                        modifier = Modifier.fillMaxWidth().padding(4.dp),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceEvenly
                     ){

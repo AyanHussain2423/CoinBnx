@@ -99,6 +99,15 @@ class MainActivity : ComponentActivity() {
                                 )
                         }
                     },
+                    bottomBar = {
+                        BottomBar(
+                            modifier = Modifier
+                                .padding(bottom = 10.dp)
+                                .clip(RoundedCornerShape(28.dp))
+                                .fillMaxWidth(),
+                            navController = navController
+                        )
+                    }
 
                 ){ innerPAdding ->
                     val coins : State<List<CoinX>> = coinViewModel.coins.collectAsState(initial = emptyList())
@@ -124,7 +133,7 @@ fun HomeScreen(
     val coins : State<List<CoinX>> = coinViewModel.coins.collectAsState(initial = emptyList())
     Log.d("helo",coins.value.toString())
     Box(
-        modifier = modifier.fillMaxHeight()
+        modifier = modifier.fillMaxHeight().padding(paddingValues)
             .background(MaterialTheme.colorScheme.background)
     ) {
         Column {
@@ -134,7 +143,7 @@ fun HomeScreen(
             WalletCard(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(paddingValues)
+                    .padding()
                     .padding(start = 30.dp, end = 30.dp),
                 balance = "200.00",
                 profit_loss_percentage = "+ 12.3"
@@ -198,14 +207,7 @@ fun HomeScreen(
             }
         }
         Spacer(modifier = Modifier.height(16.dp))
-        BottomBar(
-            modifier = Modifier
-                .padding(bottom = 20.dp, start = 22.dp, end = 22.dp)
-                .clip(RoundedCornerShape(28.dp))
-                .fillMaxWidth()
-                .align(alignment = Alignment.BottomStart),
-            navController = navController
-        )
+
     }
 }
 

@@ -85,7 +85,7 @@ fun BottomBar(
                             selectedIndex.value = index
                             when (index) {
                                 0 -> navController.navigate("home") // Navigate to Home screen
-                               // 1 -> navController.navigate("invest") // Navigate to Invest screen
+                               1 -> navController.navigate("invest_page") // Navigate to Invest screen
                                // 3 -> navController.navigate("portfolio") // Navigate to Portfolio screen
                             }
                         }

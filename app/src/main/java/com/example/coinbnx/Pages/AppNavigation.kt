@@ -9,6 +9,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.coinbnx.HomeScreen
 import com.example.coinbnx.Pages.InvestScreen
+import com.example.coinbnx.Pages.Invest_Page
 import com.example.coinbnx.data.CoinX
 
 @Composable
@@ -40,6 +41,12 @@ fun AppNavigation(
                     ) // Pass the CoinX object to InvestScreen
                 }
             }
+        }
+        composable("invest_page") {
+            Invest_Page(
+                navController = navController,
+                paddingValues = paddingValues
+            )
         }
 
     }
