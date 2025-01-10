@@ -1,14 +1,10 @@
 package com.example.coinbnx.Pages
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -24,7 +20,6 @@ import com.example.coinbnx.Component.Button_Btn
 import com.example.coinbnx.Component.Invest_Coin_Box
 import com.example.coinbnx.Component.SparklineChart
 import com.example.coinbnx.data.CoinX
-import com.example.coinbnx.ui.theme.blue
 import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.hazeChild
 
@@ -47,28 +42,31 @@ fun InvestScreen(
             .background(MaterialTheme.colorScheme.background)
             .padding(paddingValues)
             .padding(start = 16.dp, end = 16.dp)
-
-
     ) {
         Column(
-            modifier = Modifier.fillMaxWidth().verticalScroll(rememberScrollState()),
+            modifier = Modifier
+                .fillMaxWidth()
+                .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            // Coin Price Box
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(18.dp))
                     .background(MaterialTheme.colorScheme.onBackground.copy(0.1f))
-            ){
+            ) {
                 Column {
-                    Row( modifier = Modifier.fillMaxWidth().padding(20.dp),
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(20.dp),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.Center
                     ) {
                         Column(
-                            modifier = Modifier
-                                .weight(1f)
+                            modifier = Modifier.weight(1f)
                         ) {
                             Text(
                                 text = coinX.price.take(7),
@@ -77,7 +75,7 @@ fun InvestScreen(
                                 color = MaterialTheme.colorScheme.onBackground
                             )
                             Text(
-                                text = " 1 ${coinX.symbol}",
+                                text = "1 ${coinX.symbol}",
                                 fontWeight = FontWeight.Light,
                                 fontSize = 16.sp,
                                 color = MaterialTheme.colorScheme.onBackground
@@ -91,15 +89,15 @@ fun InvestScreen(
                                 .wrapContentWidth()
                         ) {
                             Text(
-                                text = coinX.change, // Example text
+                                text = coinX.change,
                                 fontWeight = FontWeight.Light,
                                 fontSize = 16.sp,
                                 color = MaterialTheme.colorScheme.onBackground,
                                 modifier = Modifier.align(Alignment.Center)
                             )
                         }
-
                     }
+
                     SparklineChart(
                         sparklineData = coinX.sparkline,
                         lineColor = changeColor,
@@ -108,27 +106,37 @@ fun InvestScreen(
                     )
                 }
             }
+
             Spacer(modifier = Modifier.height(12.dp))
+
+            // Coin Overview Box
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(18.dp))
-                    .background(MaterialTheme.colorScheme.onBackground.copy(0.1f)),
-            ){
-                Column (
-                    modifier = Modifier.fillMaxWidth().padding(8.dp),
+                    .background(MaterialTheme.colorScheme.onBackground.copy(0.1f))
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp),
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
-                ){
+                ) {
                     Text(
                         text = "Coin Overview",
                         fontWeight = FontWeight.Normal,
                         fontSize = 24.sp,
                         color = MaterialTheme.colorScheme.onBackground.copy(0.7f),
-                        modifier = Modifier.fillMaxWidth().padding(top = 4.dp, bottom= 4.dp)
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 4.dp, bottom = 4.dp)
                     )
+                    // Overview Rows
                     Row(
-                        modifier = Modifier.fillMaxWidth().padding(4.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(4.dp),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceEvenly
                     ) {
@@ -154,68 +162,72 @@ fun InvestScreen(
                             modifier = Modifier.weight(1f)
                         )
                         Text(
-                            text =coinX.marketCap,
+                            text = coinX.marketCap,
                             fontWeight = FontWeight.SemiBold,
                             fontSize = 10.sp,
                             color = MaterialTheme.colorScheme.onBackground,
                             modifier = Modifier.weight(1f)
                         )
                     }
-                    Row (
-                        modifier = Modifier.fillMaxWidth().padding(4.dp),
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(4.dp),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceEvenly
-                    ){
+                    ) {
                         Text(
-                            text ="Tier Rank:",
+                            text = "Tier Rank:",
                             fontWeight = FontWeight.Light,
                             fontSize = 10.sp,
                             color = MaterialTheme.colorScheme.onBackground.copy(0.7f),
                             modifier = Modifier.weight(1f)
                         )
                         Text(
-                            text =coinX.tier.toString(),
+                            text = coinX.tier.toString(),
                             fontWeight = FontWeight.SemiBold,
                             fontSize = 10.sp,
                             color = MaterialTheme.colorScheme.onBackground,
                             modifier = Modifier.weight(1f)
                         )
                         Text(
-                            text ="Coin Symbol:",
+                            text = "Coin Symbol:",
                             fontWeight = FontWeight.Light,
                             fontSize = 10.sp,
                             color = MaterialTheme.colorScheme.onBackground.copy(0.7f),
                             modifier = Modifier.weight(1f)
                         )
                         Text(
-                            text =coinX.symbol,
+                            text = coinX.symbol,
                             fontWeight = FontWeight.SemiBold,
                             fontSize = 10.sp,
                             color = MaterialTheme.colorScheme.onBackground,
                             modifier = Modifier.weight(1f)
                         )
                     }
-                    Row (
-                        modifier = Modifier.fillMaxWidth().padding(4.dp),
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(4.dp),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceEvenly
-                    ){
+                    ) {
                         Text(
-                            text ="24h Min:",
+                            text = "24h Min:",
                             fontWeight = FontWeight.Light,
                             fontSize = 10.sp,
                             color = MaterialTheme.colorScheme.onBackground.copy(0.7f),
                             modifier = Modifier.weight(1f)
                         )
                         Text(
-                            text =minValue.toString(),
+                            text = minValue.toString(),
                             fontWeight = FontWeight.SemiBold,
                             fontSize = 10.sp,
                             color = MaterialTheme.colorScheme.onBackground,
                             modifier = Modifier.weight(1f)
                         )
                         Text(
-                            text ="24h Max:",
+                            text = "24h Max:",
                             fontWeight = FontWeight.Light,
                             fontSize = 10.sp,
                             color = MaterialTheme.colorScheme.onBackground.copy(0.7f),
@@ -231,20 +243,25 @@ fun InvestScreen(
                     }
                 }
             }
+
             Text(
                 text = "Your Assets",
                 fontWeight = FontWeight.Normal,
                 fontSize = 24.sp,
                 color = MaterialTheme.colorScheme.onBackground.copy(0.7f),
-                modifier = Modifier.fillMaxWidth().padding(top = 12.dp, bottom= 8.dp, start= 4.dp)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 12.dp, bottom = 8.dp, start = 4.dp)
             )
             Invest_Coin_Box(
-                coin = coinX,
+                coin = coinX
             )
-
         }
+
+        // Buy/Sell Buttons
         Row(
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
                 .align(Alignment.BottomCenter)
                 .padding(top = 16.dp, bottom = 8.dp),
             verticalAlignment = Alignment.CenterVertically
@@ -258,7 +275,7 @@ fun InvestScreen(
             )
             Button_Btn(
                 modifier = Modifier
-                    .padding( end = 7.dp)
+                    .padding(end = 7.dp)
                     .weight(1f),
                 color = Color.Red,
                 btn_text = "Sell"
@@ -278,7 +295,7 @@ fun PreviewInvestScreen() {
         `24hVolume` = "2,000,000,000",
         btcPrice = "50,000.00",
         coinrankingUrl = "https://www.coinranking.com/coin/btc-bitcoin",
-        color = Color(0xFFf2a900).toString(), // Example color
+        color = Color(0xFFf2a900).toString(),
         contractAddresses = listOf("0x1234...", "0x5678..."),
         iconUrl = "https://cryptologos.cc/logos/bitcoin-btc-logo.png",
         listedAt = 20130428,
