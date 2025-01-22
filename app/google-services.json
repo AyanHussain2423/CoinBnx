@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "96088567903",
+    "project_id": "coinbnx-55a7f",
+    "storage_bucket": "coinbnx-55a7f.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:96088567903:android:21faaa5b76e7ed541b6bea",
+        "android_client_info": {
+          "package_name": "com.example.coinbnx"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBRAKiI8YM40t4Bhub0FYs0ko1M_DfgHcI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
