@@ -6,6 +6,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.NavHostController
 import com.example.coinbnx.HomeScreen
+import com.example.coinbnx.Pages.Buy_Sell_Page
 import com.example.coinbnx.Pages.InvestScreen
 import com.example.coinbnx.Pages.Invest_Page
 import com.example.coinbnx.Pages.SignUpUI
@@ -42,7 +43,9 @@ fun AppNavigation(
                     InvestScreen(
                         coinX = selectedCoin,
                         paddingValues = paddingValues,
-                        sparklineData = selectedCoin.sparkline
+                        sparklineData = selectedCoin.sparkline,
+                        navController = navController,
+                        index = index
                     )
                 }
             }
@@ -52,6 +55,17 @@ fun AppNavigation(
                 navController = navController,
                 paddingValues = paddingValues
             )
+        }
+        composable("buy_sell/{index}") {backStackEntry ->
+            val index = backStackEntry.arguments?.getString("index")?.toIntOrNull()
+            index?.let {
+                val coin = coinList.getOrNull(it)
+                coin?.let { selectedCoin ->
+                   Buy_Sell_Page(
+                       coinX = selectedCoin,
+                   )
+                }
+            }
         }
         composable("signin") {
             SignUpUI(

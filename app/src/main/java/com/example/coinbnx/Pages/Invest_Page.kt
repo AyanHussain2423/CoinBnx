@@ -46,7 +46,7 @@ fun Invest_Page(
     ) {
         Column {
             LazyColumn {
-                items(count = minOf(coins.value.size)) { index -> // Limit to the first 6 items
+                items(count = minOf(coins.value.size)) { index ->
                     Coins_Box(
                         modifier = Modifier.padding(
                             start = 20.dp,

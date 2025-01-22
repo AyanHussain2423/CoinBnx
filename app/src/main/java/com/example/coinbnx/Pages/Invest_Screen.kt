@@ -17,6 +17,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.coinbnx.Component.Button_Btn
 import com.example.coinbnx.Component.Invest_Coin_Box
 import com.example.coinbnx.Component.SparklineChart
@@ -34,7 +35,9 @@ fun InvestScreen(
     modifier: Modifier = Modifier,
     coinX: CoinX,
     sparklineData: List<Float>,
-    paddingValues: PaddingValues
+    paddingValues: PaddingValues,
+    navController: NavController,
+    index : Int
 ) {
     val filteredData = sparklineData.filterNotNull()
     val minValue = filteredData.minOrNull()?.toFloat() ?: 0f
@@ -45,12 +48,6 @@ fun InvestScreen(
     // Define the color based on whether the change is positive or negative
     val changeColor = if (changeValue > 0) Color.Green else if (changeValue < 0) Color.Red else Color.Gray
 
-    val coinlist = listOf<String>(
-        coinX.symbol,
-        coinX.price,
-        coinX.name,
-        coinX.iconUrl,
-    )
     Box(
         modifier = modifier
             .fillMaxSize()
@@ -272,7 +269,6 @@ fun InvestScreen(
             )
         }
 
-        // Buy/Sell Buttons
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -287,9 +283,7 @@ fun InvestScreen(
                 color = Color.Green,
                 btn_text = "Buy",
                 onClick = {
-                    buy(
-                        coinlist
-                    )
+                    navController.navigate("buy_sell/$index")
                 }
             )
             Button_Btn(
@@ -330,15 +324,8 @@ fun PreviewInvestScreen() {
     InvestScreen(
         coinX = sampleCoinX,
         paddingValues = PaddingValues(10.dp),
-        sparklineData = sampleCoinX.sparkline
+        sparklineData = sampleCoinX.sparkline,
+        navController = TODO(),
+        index = TODO()
     )
-}
-fun buy(
-    coinlist: List<String>
-) {
-    myRef.child("User").child("Asset").setValue(coinlist)
-}
-
-fun sell(){
-
 }
