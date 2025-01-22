@@ -5,6 +5,7 @@ plugins {
 
     id("kotlin-kapt")
     id("com.google.dagger.hilt.android")
+    alias(libs.plugins.google.gms.google.services)
 }
 
 android {
@@ -53,6 +54,9 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.firebase.database)
+    implementation(libs.androidx.foundation.android)
+    implementation(libs.firebase.auth)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -86,6 +90,11 @@ dependencies {
 
     implementation ("io.coil-kt:coil-compose:2.1.0") // Coil for Compose
     implementation ("io.coil-kt:coil-svg:2.1.0") // Coil extension to load SVG
+
+    implementation ("com.airbnb.android:lottie-compose:6.0.0") // Latest version at the time of writing
+
+    // For Lottie animation rendering
+    implementation ("com.airbnb.android:lottie:6.0.0") // Make sure this version matches
 }
 
 kapt{

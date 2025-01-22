@@ -27,10 +27,11 @@ import com.example.coinbnx.ui.theme.CoinBnxTheme
 fun Button_Btn(
     modifier: Modifier = Modifier,
     btn_text: String,
-    color: Color
+    color: Color,
+    onClick: () -> Unit
 ) {
     Button(
-        onClick = { },
+        onClick = onClick,
         modifier = modifier,
         shape = RoundedCornerShape(16.dp),
         colors = ButtonDefaults.buttonColors(
@@ -61,12 +62,14 @@ fun Previewe() {
             Button_Btn(
                 modifier = Modifier.weight(1f), // Distribute width evenly
                 color = Color.Blue,
-                btn_text = "Deposit"
+                btn_text = "Deposit",
+                onClick = {}
             )
             Button_Btn(
                 modifier = Modifier.weight(1f),
                 color = Color.Black,
-                btn_text = "Withdraw"
+                btn_text = "Withdraw",
+                onClick = {}
             )
         }
     }

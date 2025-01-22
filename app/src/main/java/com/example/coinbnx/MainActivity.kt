@@ -1,12 +1,14 @@
 package com.example.coinbnx
 
 import AppNavigation
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -56,6 +58,9 @@ import com.example.coinbnx.repository.CoinViewModel
 
 import com.example.coinbnx.ui.theme.CoinBnxTheme
 import com.example.coinbnx.ui.theme.blue
+import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.auth
 import dagger.hilt.android.AndroidEntryPoint
 
 import dev.chrisbanes.haze.HazeState
@@ -65,17 +70,18 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-
+private lateinit var auth: FirebaseAuth
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+    @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val coinViewModel: CoinViewModel by viewModels()
+        auth = Firebase.auth
         enableEdgeToEdge()
         setContent {
             CoinBnxTheme {
-
                 val hazeState = remember { HazeState() }
                 val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(
                     state = rememberTopAppBarState()
@@ -117,7 +123,8 @@ class MainActivity : ComponentActivity() {
                     AppNavigation(
                         navController = navController,
                         paddingValues = innerPAdding,
-                        coinList = coins.value
+                        coinList = coins.value,
+                        firebaseAuth = auth
                     )
                 }
             }
@@ -165,7 +172,8 @@ fun HomeScreen(
                         .weight(1f)
                         .offset(y = -5.dp),
                     color = blue,
-                    btn_text = "Transfer"
+                    btn_text = "Transfer",
+                    onClick = {}
                 )
                 Button_Btn(
                     modifier = Modifier
@@ -173,7 +181,8 @@ fun HomeScreen(
                         .weight(1f)
                         .offset(y = -5.dp),
                     color = MaterialTheme.colorScheme.background,
-                    btn_text = "Withdraw"
+                    btn_text = "Withdraw",
+                    onClick = {}
                 )
             }
 

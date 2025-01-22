@@ -1,5 +1,6 @@
 package com.example.coinbnx.Pages
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -20,22 +21,36 @@ import com.example.coinbnx.Component.Button_Btn
 import com.example.coinbnx.Component.Invest_Coin_Box
 import com.example.coinbnx.Component.SparklineChart
 import com.example.coinbnx.data.CoinX
+import com.google.firebase.Firebase
+import com.google.firebase.database.database
 import dev.chrisbanes.haze.HazeState
-import dev.chrisbanes.haze.hazeChild
+
+// Write a message to the database
+val database = Firebase.database
+val myRef = database.getReference()
 
 @Composable
 fun InvestScreen(
     modifier: Modifier = Modifier,
     coinX: CoinX,
+    sparklineData: List<Float>,
     paddingValues: PaddingValues
 ) {
-    val hazeState = remember { HazeState() }
+    val filteredData = sparklineData.filterNotNull()
+    val minValue = filteredData.minOrNull()?.toFloat() ?: 0f
+   val maxValue = filteredData.maxOrNull()?.toFloat() ?: 0f
+
     val changeValue = coinX.change.toFloatOrNull() ?: 0f
-    val minValue = coinX.sparkline.minOrNull() // Finds the minimum value in the list
-    val maxValue = coinX.sparkline.maxOrNull()
 
     // Define the color based on whether the change is positive or negative
     val changeColor = if (changeValue > 0) Color.Green else if (changeValue < 0) Color.Red else Color.Gray
+
+    val coinlist = listOf<String>(
+        coinX.symbol,
+        coinX.price,
+        coinX.name,
+        coinX.iconUrl,
+    )
     Box(
         modifier = modifier
             .fillMaxSize()
@@ -97,9 +112,8 @@ fun InvestScreen(
                             )
                         }
                     }
-
-                    SparklineChart(
-                        sparklineData = coinX.sparkline,
+                   SparklineChart(
+                        sparklineData = coinX.sparkline.filterNotNull(),
                         lineColor = changeColor,
                         backgroundColor = Color.Transparent,
                         change = coinX.change
@@ -271,14 +285,20 @@ fun InvestScreen(
                     .padding(end = 7.dp)
                     .weight(1f),
                 color = Color.Green,
-                btn_text = "Buy"
+                btn_text = "Buy",
+                onClick = {
+                    buy(
+                        coinlist
+                    )
+                }
             )
             Button_Btn(
                 modifier = Modifier
                     .padding(end = 7.dp)
                     .weight(1f),
                 color = Color.Red,
-                btn_text = "Sell"
+                btn_text = "Sell",
+                onClick = {}
             )
         }
     }
@@ -309,6 +329,16 @@ fun PreviewInvestScreen() {
 
     InvestScreen(
         coinX = sampleCoinX,
-        paddingValues = PaddingValues(10.dp)
+        paddingValues = PaddingValues(10.dp),
+        sparklineData = sampleCoinX.sparkline
     )
+}
+fun buy(
+    coinlist: List<String>
+) {
+    myRef.child("User").child("Asset").setValue(coinlist)
+}
+
+fun sell(){
+
 }

@@ -55,7 +55,7 @@ fun Invest_Page(
                             top = 4.dp
                         ),
                         coin = coins.value[index],
-                        index = index,  // Pass the index
+                        index = index,
                         navController = navController,
                     )
                 }

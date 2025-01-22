@@ -1,27 +1,31 @@
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.example.coinbnx.HomeScreen
 import com.example.coinbnx.Pages.InvestScreen
 import com.example.coinbnx.Pages.Invest_Page
+import com.example.coinbnx.Pages.SignUpUI
 import com.example.coinbnx.data.CoinX
+import com.google.firebase.auth.FirebaseAuth
 
 @Composable
 fun AppNavigation(
     navController: NavHostController,
     paddingValues: PaddingValues,
-    coinList: List<CoinX>
+    coinList: List<CoinX>,
+    firebaseAuth: FirebaseAuth
 ) {
-    // NavHost handles navigation based on the selected screen
+    // Track the starting destination dynamically based on authentication state
+    val currentUser = firebaseAuth.currentUser
+    val startDestination = if (currentUser != null) "home" else "signin"
+
     NavHost(
         navController = navController,
-        startDestination = "home"
+        startDestination = startDestination
     ) {
         // Define your screens and pass the paddingModifier
         composable("home") {
@@ -38,7 +42,8 @@ fun AppNavigation(
                     InvestScreen(
                         coinX = selectedCoin,
                         paddingValues = paddingValues,
-                    ) // Pass the CoinX object to InvestScreen
+                        sparklineData = selectedCoin.sparkline
+                    )
                 }
             }
         }
@@ -48,6 +53,10 @@ fun AppNavigation(
                 paddingValues = paddingValues
             )
         }
-
+        composable("signin") {
+            SignUpUI(
+                navController = navController
+            )
+        }
     }
 }
