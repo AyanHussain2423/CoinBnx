@@ -18,6 +18,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.coinbnx.Component.Button_Btn
 import com.example.coinbnx.Component.Invest_Coin_Box
 import com.example.coinbnx.Component.SparklineChart
@@ -62,6 +63,45 @@ fun InvestScreen(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(20.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Column(
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text(
+                        text = coinX.price.take(7),
+                        fontWeight = FontWeight.Medium,
+                        fontSize = 32.sp,
+                        color = MaterialTheme.colorScheme.onBackground
+                    )
+                    Text(
+                        text = "1 ${coinX.symbol}",
+                        fontWeight = FontWeight.Light,
+                        fontSize = 16.sp,
+                        color = MaterialTheme.colorScheme.onBackground
+                    )
+                }
+                Box(
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(6.dp))
+                        .background(changeColor)
+                        .padding(horizontal = 16.dp, vertical = 5.dp)
+                        .wrapContentWidth()
+                ) {
+                    Text(
+                        text = coinX.change,
+                        fontWeight = FontWeight.Light,
+                        fontSize = 16.sp,
+                        color = MaterialTheme.colorScheme.onBackground,
+                        modifier = Modifier.align(Alignment.Center)
+                    )
+                }
+            }
             // Coin Price Box
             Box(
                 modifier = Modifier
@@ -70,45 +110,6 @@ fun InvestScreen(
                     .background(MaterialTheme.colorScheme.onBackground.copy(0.1f))
             ) {
                 Column {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(20.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.Center
-                    ) {
-                        Column(
-                            modifier = Modifier.weight(1f)
-                        ) {
-                            Text(
-                                text = coinX.price.take(7),
-                                fontWeight = FontWeight.Medium,
-                                fontSize = 32.sp,
-                                color = MaterialTheme.colorScheme.onBackground
-                            )
-                            Text(
-                                text = "1 ${coinX.symbol}",
-                                fontWeight = FontWeight.Light,
-                                fontSize = 16.sp,
-                                color = MaterialTheme.colorScheme.onBackground
-                            )
-                        }
-                        Box(
-                            modifier = Modifier
-                                .clip(RoundedCornerShape(6.dp))
-                                .background(changeColor)
-                                .padding(horizontal = 16.dp, vertical = 5.dp)
-                                .wrapContentWidth()
-                        ) {
-                            Text(
-                                text = coinX.change,
-                                fontWeight = FontWeight.Light,
-                                fontSize = 16.sp,
-                                color = MaterialTheme.colorScheme.onBackground,
-                                modifier = Modifier.align(Alignment.Center)
-                            )
-                        }
-                    }
                    SparklineChart(
                         sparklineData = coinX.sparkline.filterNotNull(),
                         lineColor = changeColor,
@@ -325,7 +326,7 @@ fun PreviewInvestScreen() {
         coinX = sampleCoinX,
         paddingValues = PaddingValues(10.dp),
         sparklineData = sampleCoinX.sparkline,
-        navController = TODO(),
-        index = TODO()
+        navController = rememberNavController(), // Add the NavController here
+        index = 0 // Or any index you want for testing
     )
 }

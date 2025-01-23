@@ -63,6 +63,7 @@ fun AppNavigation(
                 coin?.let { selectedCoin ->
                    Buy_Sell_Page(
                        coinX = selectedCoin,
+                       navController = navController
                    )
                 }
             }

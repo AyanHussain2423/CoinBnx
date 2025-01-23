@@ -5,6 +5,7 @@ import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -28,6 +29,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import coil.decode.SvgDecoder
 import coil.request.ImageRequest
@@ -39,6 +41,7 @@ import com.example.coinbnx.ui.theme.CoinBnxTheme
 fun Buy_Sell_Page(
     modifier: Modifier = Modifier,
     coinX: CoinX,
+    navController: NavController
 ) {
     Log.d("HAhahaha",coinX.name)
     val painter = rememberAsyncImagePainter(
@@ -71,6 +74,9 @@ fun Buy_Sell_Page(
                             .size(38.dp)
                             .clip(RoundedCornerShape(100.dp))
                             .padding(top = 4.dp, bottom = 4.dp)
+                            .clickable{
+                                navController.popBackStack()
+                            },
                     )
                     Spacer(modifier = Modifier.weight(1f))
                     Icon(
@@ -107,7 +113,7 @@ fun Buy_Sell_Page(
                 modifier = Modifier.padding(end = 30.dp)
             )
             Text(
-                text = coinX.price,
+                text = coinX.price.take(8),
                 fontWeight = FontWeight.Light,
                 fontSize = 20.sp,
                 color = MaterialTheme.colorScheme.onBackground,
@@ -139,97 +145,199 @@ fun Buy_Sell_Page(
             }
         }
         Spacer(modifier = Modifier.height(16.dp))
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            AnimatedAmountTextField()
-            Text(
-                text = "=",
-                fontWeight = FontWeight.Light,
-                fontSize = 12.sp,
-                color = MaterialTheme.colorScheme.onBackground,
+            AnimatedAmountTextField(
+                coin_price = coinX.price
             )
-            AnimatedAmountTextField()
-        }
 
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AnimatedAmountTextField() {
-    var text by remember { mutableStateOf(TextFieldValue("")) }
-    var focused by remember { mutableStateOf(false) }
+fun AnimatedAmountTextField(
+    coin_price: String
+) {
+    var Dollers by remember { mutableStateOf(TextFieldValue("")) }
+    var Coin_Amount by remember { mutableStateOf(TextFieldValue("")) }
+    var focused1 by remember { mutableStateOf(false) }
+    var focused2 by remember { mutableStateOf(false) }
+    var Bitcoin by remember { mutableStateOf("") }
 
     val gradientBrush = Brush.linearGradient(
         colors = listOf(Color.Blue, Color.Cyan)
     )
+
+    // Function to update Coin Amount based on Dollers and coin_price
+    fun updateCoinAmount() {
+        val dollerAmount = Dollers.text.toDoubleOrNull() ?: 0.0
+        val coinPrice = coin_price.toDoubleOrNull() ?: 1.0
+        if (coinPrice != 0.0 && dollerAmount > 0) {
+            val calculatedCoinAmount = dollerAmount / coinPrice
+            Coin_Amount = TextFieldValue(String.format("%.6f", calculatedCoinAmount)) // Update Coin_Amount
+        } else {
+            Coin_Amount = TextFieldValue("") // Clear Coin_Amount if input is invalid or zero
+        }
+    }
+
+    // Function to update Dollers based on Coin Amount and coin_price
+    fun updateDollers() {
+        val coinAmount = Coin_Amount.text.toDoubleOrNull() ?: 0.0
+        val coinPrice = coin_price.toDoubleOrNull() ?: 1.0 // Get coin price
+        if (coinPrice != 0.0 && coinAmount > 0) {
+            val calculatedDollers = coinAmount * coinPrice
+            Dollers = TextFieldValue(String.format("%.2f", calculatedDollers)) // Update Dollers
+        } else {
+            Dollers = TextFieldValue("") // Clear Dollers if input is invalid or zero
+        }
+    }
+
+    // Call updateCoinAmount whenever Dollers value changes
+    LaunchedEffect(Dollers) {
+        if (Dollers.text.isNotEmpty()) { // Only update Coin_Amount if Dollers is not empty
+            updateCoinAmount()
+        }
+    }
+
+    // Call updateDollers whenever Coin_Amount value changes
+    LaunchedEffect(Coin_Amount) {
+        if (Coin_Amount.text.isNotEmpty()) { // Only update Dollers if Coin_Amount is not empty
+            updateDollers()
+        }
+    }
 
     Column(
         modifier = Modifier
             .padding(8.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Box(
-            modifier = Modifier
-                .width(150.dp)
-                .fillMaxHeight(0.1f)
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
         ) {
-            TextField(
-                value = text,
-                onValueChange = {
-                    text = it
-                },
-                label = {
-                    Text("Enter Amount", style = TextStyle(color = Color.Gray, fontSize = 12.sp))
-                },
+            Box(
                 modifier = Modifier
-                    .padding(4.dp) // Padding inside the TextField
-                    .onFocusChanged {
-                        focused = it.isFocused
-                    }
-                    .drawBehind {
-                        // Custom gradient border when focused
-                        if (focused) {
-                            val borderWidth = 2.dp.toPx()
-                            val width = size.width
-                            val height = size.height
-                            val cornerRadius = 8.dp.toPx()
-
-                            drawRoundRect(
-                                brush = gradientBrush,
-                                size = androidx.compose.ui.geometry.Size(width, height),
-                                cornerRadius = androidx.compose.ui.geometry.CornerRadius(cornerRadius, cornerRadius),
-                                style = androidx.compose.ui.graphics.drawscope.Stroke(borderWidth)
-                            )
-                        }else{
-                            val borderWidth = 2.dp.toPx()
-                            val width = size.width
-                            val height = size.height
-                            val cornerRadius = 8.dp.toPx()
-
-                            drawRoundRect(
-                                color = Color.Gray,
-                                size = androidx.compose.ui.geometry.Size(width, height),
-                                cornerRadius = androidx.compose.ui.geometry.CornerRadius(cornerRadius, cornerRadius),
-                                style = androidx.compose.ui.graphics.drawscope.Stroke(borderWidth)
-                            )
-                        }
+                    .width(150.dp)
+                    .fillMaxHeight(0.1f)
+            ) {
+                TextField(
+                    value = Dollers,
+                    onValueChange = {
+                        Dollers = it
                     },
-                colors = TextFieldDefaults.textFieldColors(
-                    containerColor = Color.Transparent,
-                    focusedIndicatorColor = Color.Transparent,  // Remove the default indicator color
-                    unfocusedIndicatorColor = Color.Transparent // Remove the default indicator color
-                ),
-                textStyle = TextStyle(fontSize = 14.sp),
-                keyboardOptions = KeyboardOptions.Default.copy(
-                    keyboardType = KeyboardType.Number
+                    label = {
+                        Text("In Dollers", style = TextStyle(color = Color.Gray, fontSize = 12.sp))
+                    },
+                    modifier = Modifier
+                        .padding(4.dp) // Padding inside the TextField
+                        .onFocusChanged {
+                            focused1 = it.isFocused
+                        }
+                        .drawBehind {
+                            // Custom gradient border when focused
+                            if (focused1) {
+                                val borderWidth = 2.dp.toPx()
+                                val width = size.width
+                                val height = size.height
+                                val cornerRadius = 8.dp.toPx()
+
+                                drawRoundRect(
+                                    brush = gradientBrush,
+                                    size = androidx.compose.ui.geometry.Size(width, height),
+                                    cornerRadius = androidx.compose.ui.geometry.CornerRadius(cornerRadius, cornerRadius),
+                                    style = androidx.compose.ui.graphics.drawscope.Stroke(borderWidth)
+                                )
+                            } else {
+                                val borderWidth = 2.dp.toPx()
+                                val width = size.width
+                                val height = size.height
+                                val cornerRadius = 8.dp.toPx()
+
+                                drawRoundRect(
+                                    color = Color.Gray,
+                                    size = androidx.compose.ui.geometry.Size(width, height),
+                                    cornerRadius = androidx.compose.ui.geometry.CornerRadius(cornerRadius, cornerRadius),
+                                    style = androidx.compose.ui.graphics.drawscope.Stroke(borderWidth)
+                                )
+                            }
+                        },
+                    colors = TextFieldDefaults.textFieldColors(
+                        containerColor = Color.Transparent,
+                        focusedIndicatorColor = Color.Transparent,  // Remove the default indicator color
+                        unfocusedIndicatorColor = Color.Transparent // Remove the default indicator color
+                    ),
+                    textStyle = TextStyle(fontSize = 14.sp),
+                    keyboardOptions = KeyboardOptions.Default.copy(
+                        keyboardType = KeyboardType.Number
+                    )
                 )
+            }
+
+            Text(
+                text = "=",
+                fontWeight = FontWeight.Light,
+                fontSize = 12.sp,
+                color = MaterialTheme.colorScheme.onBackground,
             )
+            Box(
+                modifier = Modifier
+                    .width(150.dp)
+                    .fillMaxHeight(0.1f)
+            ) {
+                TextField(
+                    value = Coin_Amount,
+                    onValueChange = {
+                        Coin_Amount = it
+                    },
+                    label = {
+                        Text("In Coins", style = TextStyle(color = Color.Gray, fontSize = 12.sp))
+                    },
+                    modifier = Modifier
+                        .padding(4.dp) // Padding inside the TextField
+                        .onFocusChanged {
+                            focused2 = it.isFocused
+                        }
+                        .drawBehind {
+                            // Custom gradient border when focused
+                            if (focused2) {
+                                val borderWidth = 2.dp.toPx()
+                                val width = size.width
+                                val height = size.height
+                                val cornerRadius = 8.dp.toPx()
+
+                                drawRoundRect(
+                                    brush = gradientBrush,
+                                    size = androidx.compose.ui.geometry.Size(width, height),
+                                    cornerRadius = androidx.compose.ui.geometry.CornerRadius(cornerRadius, cornerRadius),
+                                    style = androidx.compose.ui.graphics.drawscope.Stroke(borderWidth)
+                                )
+                            } else {
+                                val borderWidth = 2.dp.toPx()
+                                val width = size.width
+                                val height = size.height
+                                val cornerRadius = 8.dp.toPx()
+
+                                drawRoundRect(
+                                    color = Color.Gray,
+                                    size = androidx.compose.ui.geometry.Size(width, height),
+                                    cornerRadius = androidx.compose.ui.geometry.CornerRadius(cornerRadius, cornerRadius),
+                                    style = androidx.compose.ui.graphics.drawscope.Stroke(borderWidth)
+                                )
+                            }
+                        },
+                    colors = TextFieldDefaults.textFieldColors(
+                        containerColor = Color.Transparent,
+                        focusedIndicatorColor = Color.Transparent,  // Remove the default indicator color
+                        unfocusedIndicatorColor = Color.Transparent // Remove the default indicator color
+                    ),
+                    textStyle = TextStyle(fontSize = 14.sp),
+                    keyboardOptions = KeyboardOptions.Default.copy(
+                        keyboardType = KeyboardType.Number
+                    )
+                )
+            }
         }
+
     }
 }
 
@@ -261,6 +369,7 @@ fun prev() {
 
         Buy_Sell_Page(
             coinX = sampleCoinX,
+            navController = TODO()
         )
     }
 }

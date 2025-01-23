@@ -57,7 +57,7 @@ fun SparklineChart(
 
         Canvas(modifier = Modifier
             .fillMaxWidth()
-            .height(200.dp)
+            .height(150.dp)
             .onGloballyPositioned { coordinates ->
                 chartWidth = coordinates.size.width.toFloat()
                 chartHeight = coordinates.size.height.toFloat()
