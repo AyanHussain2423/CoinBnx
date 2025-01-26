@@ -166,7 +166,6 @@ fun HomeScreen(
                     .fillMaxWidth()
                     .padding()
                     .padding(start = 30.dp, end = 30.dp),
-                balance = "200.00",
                 profit_loss_percentage = "+ 12.3"
             )
 

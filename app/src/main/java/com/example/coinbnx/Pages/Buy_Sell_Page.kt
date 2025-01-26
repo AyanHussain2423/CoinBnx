@@ -86,7 +86,6 @@ fun Buy_Sell_Page(
                     Icon(
                         painter = painter,
                         contentDescription = null,
-                        tint = Color.White,
                         modifier = Modifier
                             .size(38.dp)
                             .clip(RoundedCornerShape(100.dp))
@@ -152,7 +151,8 @@ fun Buy_Sell_Page(
             AnimatedAmountTextField(
                 coin_price = coinX.price,
                 coinX= coinX,
-                index = index
+                index = index,
+                navController = navController
             )
         Spacer(modifier = Modifier.weight(1f))
     }
@@ -163,7 +163,8 @@ fun Buy_Sell_Page(
 fun AnimatedAmountTextField(
     coin_price: String,
     coinX: CoinX,
-    index: Int
+    index: Int,
+    navController: NavController,
 ) {
     var Dollers by remember { mutableStateOf(TextFieldValue("")) }
     var Coin_Amount by remember { mutableStateOf(TextFieldValue("")) }
@@ -357,6 +358,7 @@ fun AnimatedAmountTextField(
                Coin_Bought_Price = coinX.price,
                index = index.toString()
            ),
+            navController = navController
         )
         Spacer(modifier = Modifier.height(16.dp))
     }

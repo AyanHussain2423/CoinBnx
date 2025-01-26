@@ -28,6 +28,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.coinbnx.data.Firebase_Coin
 import com.example.coinbnx.ui.theme.CoinBnxTheme
 import com.google.firebase.database.DatabaseReference
@@ -48,11 +50,11 @@ val myRef: DatabaseReference = database.getReference()
 @Composable
 fun ConfirmationButton(
     modifier: Modifier = Modifier,
-    firebaseCoin: Firebase_Coin
+    firebaseCoin: Firebase_Coin,
+    navController: NavController,
 ) {
     val width = 350.dp
     val dragSize = 50.dp
-
     var swipeableState = rememberSwipeableState(ConfirmationState.Default)
     val sizePx = with(LocalDensity.current) { (width - dragSize).toPx() }
     val anchors = mapOf(0f to ConfirmationState.Default, sizePx to ConfirmationState.Confirmed)
@@ -78,6 +80,10 @@ fun ConfirmationButton(
                     isLoading = false
                     if (task.isSuccessful) {
                         isConfirmed = false
+                        navController.navigate("portfolio_page"){
+                            popUpTo("home") { inclusive = true }
+                            launchSingleTop = true
+                        }
 
                     } else {
                         isConfirmed = false
@@ -177,7 +183,8 @@ fun prev() {
             index = "1"
         )
         ConfirmationButton(
-            firebaseCoin = sampleCoin
+            firebaseCoin = sampleCoin,
+            navController = rememberNavController()
         )
     }
 }

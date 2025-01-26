@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -71,8 +72,9 @@ fun Portfolio_Coin_Box(
     Spacer(modifier = Modifier.height(8.dp))
     Box(
         modifier = modifier
-            .height(100.dp)  // Height is adjusted dynamically
+            .fillMaxHeight(0.2f)  // Height is adjusted dynamically
             .fillMaxWidth()
+            .padding(start = 24.dp, end = 24.dp)
             .clip(RoundedCornerShape(18.dp))
             .clickable {
                 // Handle click action
@@ -152,7 +154,7 @@ fun Portfolio_Coin_Box(
                 horizontalArrangement = Arrangement.Start
             ) {
                 Text(
-                    text = coin.price_in_Dollers,  // Replace with real data if available
+                    text = "$${coin.price_in_Dollers}",  // Replace with real data if available
                     color = MaterialTheme.colorScheme.onBackground,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
