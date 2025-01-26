@@ -24,6 +24,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.rememberLottieComposition
@@ -35,7 +37,10 @@ const val password = "1234" //sample password
 
 @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
 @Composable
-fun Pinccode_page() {
+fun Pinccode_page(
+    modifier: Modifier = Modifier,
+    navController : NavController,
+) {
     val inputPin = remember { mutableStateListOf<Int>() }
     val error = remember { mutableStateOf<String>("") }
     val showSuccess = remember { mutableStateOf(false) }
@@ -48,6 +53,10 @@ fun Pinccode_page() {
             if (inputPin.joinToString("") == password) {
                 showSuccess.value = true
                 error.value = ""
+                navController.navigate("home"){
+                    popUpTo("home") { inclusive = true }
+                    launchSingleTop = true
+                }
 
             } else {
                 inputPin.clear()
@@ -263,5 +272,7 @@ fun PinKeyItem(
 @Preview(showBackground = true)
 @Composable
 fun PreviewPinCodePage() {
-    Pinccode_page()
+    Pinccode_page(
+        navController = rememberNavController()
+    )
 }

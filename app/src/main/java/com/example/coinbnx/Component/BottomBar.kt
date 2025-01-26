@@ -96,7 +96,7 @@ fun BottomBar(
                     Icon(
                         imageVector = item.icon,
                         contentDescription = item.title,
-                        tint = if (isSelected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onBackground, // Change icon color based on selection
+                        tint = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground, // Change icon color based on selection
                         modifier = Modifier.size(24.dp)
                             .clip(RoundedCornerShape(14.dp)) // Clip icon inside the rounded border
                     )

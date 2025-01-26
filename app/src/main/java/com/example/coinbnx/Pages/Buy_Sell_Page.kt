@@ -227,7 +227,7 @@ fun AnimatedAmountTextField(
             Box(
                 modifier = Modifier
                     .width(150.dp)
-                    .fillMaxHeight(0.1f)
+                    .fillMaxHeight(0.2f)
             ) {
                 TextField(
                     value = Dollers,
@@ -238,7 +238,7 @@ fun AnimatedAmountTextField(
                         Text("In Dollers", style = TextStyle(color = Color.Gray, fontSize = 12.sp))
                     },
                     modifier = Modifier
-                        .padding(4.dp) // Padding inside the TextField
+                        .padding(2.dp) // Padding inside the TextField
                         .onFocusChanged {
                             focused1 = it.isFocused
                         }
@@ -281,17 +281,10 @@ fun AnimatedAmountTextField(
                     )
                 )
             }
-
-            Text(
-                text = "=",
-                fontWeight = FontWeight.Light,
-                fontSize = 12.sp,
-                color = MaterialTheme.colorScheme.onBackground,
-            )
             Box(
                 modifier = Modifier
                     .width(150.dp)
-                    .fillMaxHeight(0.1f)
+                    .fillMaxHeight(0.2f)
             ) {
                 TextField(
                     value = Coin_Amount,
@@ -302,7 +295,7 @@ fun AnimatedAmountTextField(
                         Text("In Coins", style = TextStyle(color = Color.Gray, fontSize = 12.sp))
                     },
                     modifier = Modifier
-                        .padding(4.dp) // Padding inside the TextField
+                        .padding(2.dp) // Padding inside the TextField
                         .onFocusChanged {
                             focused2 = it.isFocused
                         }
