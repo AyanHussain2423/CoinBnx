@@ -263,7 +263,8 @@ fun InvestScreen(
                     .padding(top = 12.dp, bottom = 8.dp, start = 4.dp)
             )
             Invest_Coin_Box(
-                coin = coinX
+                coin = coinX,
+                index = index
             )
         }
 

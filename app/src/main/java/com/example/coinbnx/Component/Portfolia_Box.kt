@@ -24,6 +24,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -59,7 +60,15 @@ fun Portfolio_Coin_Box(
             0.0 // Default value in case of invalid index
         }
     }
-    Log.d("price", profit.toString())
+    var colour = remember(profit) {
+        if (profit >0){
+            Color.Green
+        }
+        else{
+            Color.Red
+        }
+    }
+    Spacer(modifier = Modifier.height(8.dp))
     Box(
         modifier = modifier
             .height(100.dp)  // Height is adjusted dynamically
@@ -116,7 +125,7 @@ fun Portfolio_Coin_Box(
                 Spacer(modifier = Modifier.weight(1f))
                 // Coin Price
                 Text(
-                    text = "$${coin.coin_Quantity}",
+                    text = "${coin.coin_Quantity.take(4)}",
                     color = MaterialTheme.colorScheme.onBackground,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
@@ -151,9 +160,10 @@ fun Portfolio_Coin_Box(
                 )
                 Text(
                     text = "Returns $${profit.toString().take(6)}",  // Replace with real data if available
-                    color = MaterialTheme.colorScheme.onBackground,
+                    color = colour,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Light,
+
                 )
             }
         }

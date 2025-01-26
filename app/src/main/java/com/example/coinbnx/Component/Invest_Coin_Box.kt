@@ -11,6 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -26,12 +27,21 @@ import coil.decode.SvgDecoder
 import coil.request.ImageRequest
 import com.example.coinbnx.data.CoinX
 import com.example.coinbnx.repository.CoinViewModel
+import com.example.coinbnx.repository.FirebaseViewModel
+import com.google.firebase.database.snapshot.Index
 
 @Composable
 fun Invest_Coin_Box(
     modifier: Modifier = Modifier,
     coin: CoinX,
+    index: Int,
+    firebaseViewModel: FirebaseViewModel = hiltViewModel()
 ) {
+    val coinNamesState = firebaseViewModel.coinNames.collectAsState(initial = emptyList())
+    val coinList = firebaseViewModel.coinListState.collectAsState()
+    firebaseViewModel.fetchCoinData(coinNamesState.value)
+
+
     val painter = rememberAsyncImagePainter(
         model = ImageRequest.Builder(context = LocalContext.current)
             .data(coin.iconUrl)
@@ -165,6 +175,7 @@ fun InvestCoinBoxPreview() {
     // Display the Invest_Coin_Box with the mock data
     Invest_Coin_Box(
         coin = mockCoin,
-        modifier = Modifier.padding(16.dp)
+        modifier = Modifier.padding(16.dp),
+        index = 1
     )
 }
