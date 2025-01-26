@@ -31,6 +31,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import coil.decode.SvgDecoder
 import coil.request.ImageRequest
@@ -42,6 +43,7 @@ import com.example.coinbnx.repository.CoinViewModel
 fun Portfolio_Coin_Box(
     modifier: Modifier = Modifier,
     coin: Firebase_Coin,
+    navController: NavController,
     coinViewModel: CoinViewModel = hiltViewModel()
 ) {
     val coins : State<List<CoinX>> = coinViewModel.coins.collectAsState(initial = emptyList())
@@ -74,12 +76,12 @@ fun Portfolio_Coin_Box(
         modifier = modifier
             .fillMaxHeight(0.2f)  // Height is adjusted dynamically
             .fillMaxWidth()
-            .padding(start = 24.dp, end = 24.dp)
+            .padding(start = 16.dp, end = 16.dp)
             .clip(RoundedCornerShape(18.dp))
             .clickable {
-                // Handle click action
+               navController.navigate("invest/${coin.index}")
             }
-            .background(MaterialTheme.colorScheme.onBackground.copy(alpha = 0.05f)) // Light background for better visibility
+            .background(MaterialTheme.colorScheme.onBackground.copy(alpha = 0.1f)) // Light background for better visibility
     ) {
         Column(
             modifier = Modifier
@@ -156,14 +158,14 @@ fun Portfolio_Coin_Box(
                 Text(
                     text = "$${coin.price_in_Dollers}",  // Replace with real data if available
                     color = MaterialTheme.colorScheme.onBackground,
-                    fontSize = 16.sp,
+                    fontSize = 14.sp,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.weight(1f)
                 )
                 Text(
                     text = "Returns $${profit.toString().take(6)}",  // Replace with real data if available
                     color = colour,
-                    fontSize = 16.sp,
+                    fontSize = 14.sp,
                     fontWeight = FontWeight.Light,
 
                 )

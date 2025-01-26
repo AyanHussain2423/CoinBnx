@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
@@ -51,18 +52,19 @@ fun Invest_Coin_Box(
 
     Box(
         modifier = modifier
-            .height(100.dp)  // Height is adjusted dynamically
+            .fillMaxHeight(0.2f)
             .fillMaxWidth()
             .clip(RoundedCornerShape(18.dp))
             .clickable {
                 // Handle click action
             }
-            .background(MaterialTheme.colorScheme.onBackground.copy(alpha = 0.05f)) // Light background for better visibility
+            .background(MaterialTheme.colorScheme.onBackground.copy(0.1f)),// Light background for better visibility
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(12.dp) // Padding for internal spacing
+                .padding(12.dp),// Padding for internal spacing
+            verticalArrangement = Arrangement.SpaceEvenly
         ) {
             Row(
                 modifier = Modifier
@@ -105,7 +107,7 @@ fun Invest_Coin_Box(
                 Spacer(modifier = Modifier.weight(1f))
                 // Coin Price
                 Text(
-                    text = "$${coin.price}",
+                    text = "$${coin.price.toString().take(6)}",
                     color = MaterialTheme.colorScheme.onBackground,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,

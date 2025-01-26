@@ -56,7 +56,8 @@ fun Portfolia_Page(
         // List of coins
         items(count = coinList.value.size) { index ->
             Portfolio_Coin_Box(
-                coin = coinList.value[index]
+                coin = coinList.value[index],
+                navController = navController
             )
         }
     }
