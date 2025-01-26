@@ -122,6 +122,7 @@ fun InvestScreen(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .fillMaxHeight(0.3f)
                     .clip(RoundedCornerShape(18.dp))
                     .background(MaterialTheme.colorScheme.onBackground.copy(0.1f))
             ) {
