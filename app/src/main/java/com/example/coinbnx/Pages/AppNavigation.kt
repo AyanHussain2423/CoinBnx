@@ -1,7 +1,5 @@
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.NavHostController
@@ -9,6 +7,7 @@ import com.example.coinbnx.HomeScreen
 import com.example.coinbnx.Pages.Buy_Sell_Page
 import com.example.coinbnx.Pages.InvestScreen
 import com.example.coinbnx.Pages.Invest_Page
+import com.example.coinbnx.Pages.Portfolia_Page
 import com.example.coinbnx.Pages.SignUpUI
 import com.example.coinbnx.data.CoinX
 import com.google.firebase.auth.FirebaseAuth
@@ -18,8 +17,8 @@ fun AppNavigation(
     navController: NavHostController,
     paddingValues: PaddingValues,
     coinList: List<CoinX>,
-    firebaseAuth: FirebaseAuth
-) {
+    firebaseAuth: FirebaseAuth,
+    ) {
     // Track the starting destination dynamically based on authentication state
     val currentUser = firebaseAuth.currentUser
     val startDestination = if (currentUser != null) "home" else "signin"
@@ -63,10 +62,17 @@ fun AppNavigation(
                 coin?.let { selectedCoin ->
                    Buy_Sell_Page(
                        coinX = selectedCoin,
-                       navController = navController
+                       navController = navController,
+                       index = index
                    )
                 }
             }
+        }
+        composable("portfolio_page") {
+            Portfolia_Page(
+                navController = navController,
+                paddingValues = paddingValues,
+            )
         }
         composable("signin") {
             SignUpUI(

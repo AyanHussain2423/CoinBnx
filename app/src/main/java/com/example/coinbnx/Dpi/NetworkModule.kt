@@ -1,6 +1,8 @@
 package com.example.coinbnx.Dpi
 
 import com.example.coinbnx.Api.CoinApi
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -26,5 +28,11 @@ object NetworkModule {
     @Singleton
     fun provideApiService(retrofit: Retrofit): CoinApi {
         return retrofit.create(CoinApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideDatabaseReference(): DatabaseReference {
+        return FirebaseDatabase.getInstance().reference
     }
 }

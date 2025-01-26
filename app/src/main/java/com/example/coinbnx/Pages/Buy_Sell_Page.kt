@@ -1,10 +1,6 @@
 package com.example.coinbnx.Pages
 
-import android.util.Log
-import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.Arrangement
@@ -19,8 +15,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -30,20 +29,25 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberAsyncImagePainter
 import coil.decode.SvgDecoder
 import coil.request.ImageRequest
+import com.example.coinbnx.Component.ConfirmationButton
 import com.example.coinbnx.data.CoinX
+import com.example.coinbnx.data.Firebase_Coin
 import com.example.coinbnx.ui.theme.CoinBnxTheme
+import com.google.firebase.database.snapshot.Index
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Buy_Sell_Page(
     modifier: Modifier = Modifier,
     coinX: CoinX,
-    navController: NavController
+    navController: NavController,
+    index: Int
 ) {
-    Log.d("HAhahaha",coinX.name)
+
     val painter = rememberAsyncImagePainter(
         model = ImageRequest.Builder(context = LocalContext.current)
             .data(coinX.iconUrl)
@@ -75,7 +79,7 @@ fun Buy_Sell_Page(
                             .clip(RoundedCornerShape(100.dp))
                             .padding(top = 4.dp, bottom = 4.dp)
                             .clickable{
-                                navController.popBackStack()
+                                navController?.popBackStack()
                             },
                     )
                     Spacer(modifier = Modifier.weight(1f))
@@ -146,22 +150,25 @@ fun Buy_Sell_Page(
         }
         Spacer(modifier = Modifier.height(16.dp))
             AnimatedAmountTextField(
-                coin_price = coinX.price
+                coin_price = coinX.price,
+                coinX= coinX,
+                index = index
             )
-
+        Spacer(modifier = Modifier.weight(1f))
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AnimatedAmountTextField(
-    coin_price: String
+    coin_price: String,
+    coinX: CoinX,
+    index: Int
 ) {
     var Dollers by remember { mutableStateOf(TextFieldValue("")) }
     var Coin_Amount by remember { mutableStateOf(TextFieldValue("")) }
     var focused1 by remember { mutableStateOf(false) }
     var focused2 by remember { mutableStateOf(false) }
-    var Bitcoin by remember { mutableStateOf("") }
 
     val gradientBrush = Brush.linearGradient(
         colors = listOf(Color.Blue, Color.Cyan)
@@ -215,6 +222,7 @@ fun AnimatedAmountTextField(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
         ) {
+
             Box(
                 modifier = Modifier
                     .width(150.dp)
@@ -243,9 +251,9 @@ fun AnimatedAmountTextField(
 
                                 drawRoundRect(
                                     brush = gradientBrush,
-                                    size = androidx.compose.ui.geometry.Size(width, height),
-                                    cornerRadius = androidx.compose.ui.geometry.CornerRadius(cornerRadius, cornerRadius),
-                                    style = androidx.compose.ui.graphics.drawscope.Stroke(borderWidth)
+                                    size = Size(width, height),
+                                    cornerRadius = CornerRadius(cornerRadius, cornerRadius),
+                                    style = Stroke(borderWidth)
                                 )
                             } else {
                                 val borderWidth = 2.dp.toPx()
@@ -255,9 +263,9 @@ fun AnimatedAmountTextField(
 
                                 drawRoundRect(
                                     color = Color.Gray,
-                                    size = androidx.compose.ui.geometry.Size(width, height),
-                                    cornerRadius = androidx.compose.ui.geometry.CornerRadius(cornerRadius, cornerRadius),
-                                    style = androidx.compose.ui.graphics.drawscope.Stroke(borderWidth)
+                                    size = Size(width, height),
+                                    cornerRadius = CornerRadius(cornerRadius, cornerRadius),
+                                    style = Stroke(borderWidth)
                                 )
                             }
                         },
@@ -307,9 +315,9 @@ fun AnimatedAmountTextField(
 
                                 drawRoundRect(
                                     brush = gradientBrush,
-                                    size = androidx.compose.ui.geometry.Size(width, height),
-                                    cornerRadius = androidx.compose.ui.geometry.CornerRadius(cornerRadius, cornerRadius),
-                                    style = androidx.compose.ui.graphics.drawscope.Stroke(borderWidth)
+                                    size = Size(width, height),
+                                    cornerRadius = CornerRadius(cornerRadius, cornerRadius),
+                                    style = Stroke(borderWidth)
                                 )
                             } else {
                                 val borderWidth = 2.dp.toPx()
@@ -319,9 +327,9 @@ fun AnimatedAmountTextField(
 
                                 drawRoundRect(
                                     color = Color.Gray,
-                                    size = androidx.compose.ui.geometry.Size(width, height),
-                                    cornerRadius = androidx.compose.ui.geometry.CornerRadius(cornerRadius, cornerRadius),
-                                    style = androidx.compose.ui.graphics.drawscope.Stroke(borderWidth)
+                                    size = Size(width, height),
+                                    cornerRadius = CornerRadius(cornerRadius, cornerRadius),
+                                    style = Stroke(borderWidth)
                                 )
                             }
                         },
@@ -337,7 +345,20 @@ fun AnimatedAmountTextField(
                 )
             }
         }
-
+        Spacer(modifier = Modifier.weight(1f))
+        ConfirmationButton(
+           firebaseCoin = Firebase_Coin
+               (
+               iconUrl = coinX.iconUrl,
+               name = coinX.name,
+               symbol = coinX.symbol,
+               coin_Quantity = Coin_Amount.text.toString(),
+               price_in_Dollers = Dollers.text.toString(),
+               Coin_Bought_Price = coinX.price,
+               index = index.toString()
+           ),
+        )
+        Spacer(modifier = Modifier.height(16.dp))
     }
 }
 
@@ -369,7 +390,8 @@ fun prev() {
 
         Buy_Sell_Page(
             coinX = sampleCoinX,
-            navController = TODO()
+            navController = rememberNavController(),
+            index = 1
         )
     }
 }

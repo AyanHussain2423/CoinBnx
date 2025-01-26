@@ -86,7 +86,7 @@ fun BottomBar(
                             when (index) {
                                 0 -> navController.navigate("home") // Navigate to Home screen
                                1 -> navController.navigate("invest_page") // Navigate to Invest screen
-                               // 3 -> navController.navigate("portfolio") // Navigate to Portfolio screen
+                               3 -> navController.navigate("portfolio_page") // Navigate to Portfolio screen
                             }
                         }
                         .padding(8.dp), // Add padding for better alignment

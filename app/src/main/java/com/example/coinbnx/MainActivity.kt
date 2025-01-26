@@ -4,6 +4,7 @@ import AppNavigation
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -31,6 +32,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
@@ -43,6 +45,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
@@ -52,9 +57,12 @@ import com.example.coinbnx.Component.Button_Btn
 import com.example.coinbnx.Component.Coins_Box
 import com.example.coinbnx.Component.TopBar
 import com.example.coinbnx.Component.WalletCard
+import com.example.coinbnx.Component.database
 import com.example.coinbnx.data.CoinX
+import com.example.coinbnx.data.Firebase_Coin
 import com.example.coinbnx.data.coin
 import com.example.coinbnx.repository.CoinViewModel
+import com.example.coinbnx.repository.FirebaseViewModel
 
 import com.example.coinbnx.ui.theme.CoinBnxTheme
 import com.example.coinbnx.ui.theme.blue
@@ -75,7 +83,9 @@ private lateinit var auth: FirebaseAuth
 class MainActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
     @OptIn(ExperimentalMaterial3Api::class)
+
     override fun onCreate(savedInstanceState: Bundle?) {
+        val firebaseViewModel: FirebaseViewModel by viewModels()
         super.onCreate(savedInstanceState)
         val coinViewModel: CoinViewModel by viewModels()
         auth = Firebase.auth
@@ -90,6 +100,7 @@ class MainActivity : ComponentActivity() {
 
                 // Check if the current screen is the "InvestScreen"
                 val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
+
 
                 Scaffold(
                     modifier = Modifier
@@ -107,7 +118,7 @@ class MainActivity : ComponentActivity() {
                         }
                     },
                     bottomBar = {
-                        if (currentRoute == "home" || currentRoute == "invest_page") { // Only show BottomBar on HomeScreen
+                        if (currentRoute == "home" || currentRoute == "invest_page" || currentRoute == "portfolio_page") { // Only show BottomBar on HomeScreen
                             BottomBar(
                                 modifier = Modifier
                                     .padding(bottom = 10.dp)
@@ -120,11 +131,12 @@ class MainActivity : ComponentActivity() {
 
                 ){ innerPAdding ->
                     val coins : State<List<CoinX>> = coinViewModel.coins.collectAsState(initial = emptyList())
+
                     AppNavigation(
                         navController = navController,
                         paddingValues = innerPAdding,
                         coinList = coins.value,
-                        firebaseAuth = auth
+                        firebaseAuth = auth,
                     )
                 }
             }
@@ -141,7 +153,6 @@ fun HomeScreen(
 
 ) {
     val coins : State<List<CoinX>> = coinViewModel.coins.collectAsState(initial = emptyList())
-    Log.d("helo",coins.value.toString())
     Box(
         modifier = modifier.fillMaxHeight().padding(paddingValues)
             .background(MaterialTheme.colorScheme.background)

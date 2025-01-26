@@ -1,9 +1,18 @@
 package com.example.coinbnx.Component
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
@@ -11,13 +20,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -25,13 +33,16 @@ import coil.compose.rememberAsyncImagePainter
 import coil.decode.SvgDecoder
 import coil.request.ImageRequest
 import com.example.coinbnx.data.CoinX
+import com.example.coinbnx.data.Firebase_Coin
 import com.example.coinbnx.repository.CoinViewModel
 
 @Composable
-fun Invest_Coin_Box(
+fun Portfolio_Coin_Box(
     modifier: Modifier = Modifier,
-    coin: CoinX,
+    coin: Firebase_Coin,
+    coinViewModel: CoinViewModel = hiltViewModel()
 ) {
+    val coins : State<List<CoinX>> = coinViewModel.coins.collectAsState(initial = emptyList())
     val painter = rememberAsyncImagePainter(
         model = ImageRequest.Builder(context = LocalContext.current)
             .data(coin.iconUrl)
@@ -39,6 +50,16 @@ fun Invest_Coin_Box(
             .build()
     )
 
+    val indexvalue = coin.index.toInt()
+    var profit = remember(coins.value, indexvalue, coin){
+        val selectedCoin = coins.value.getOrNull(indexvalue)
+        if (selectedCoin != null) {
+            selectedCoin.price.toDouble() * coin.coin_Quantity.toDouble() - coin.price_in_Dollers.toDouble()
+        } else {
+            0.0 // Default value in case of invalid index
+        }
+    }
+    Log.d("price", profit.toString())
     Box(
         modifier = modifier
             .height(100.dp)  // Height is adjusted dynamically
@@ -95,7 +116,7 @@ fun Invest_Coin_Box(
                 Spacer(modifier = Modifier.weight(1f))
                 // Coin Price
                 Text(
-                    text = "$${coin.price}",
+                    text = "$${coin.coin_Quantity}",
                     color = MaterialTheme.colorScheme.onBackground,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
@@ -122,14 +143,14 @@ fun Invest_Coin_Box(
                 horizontalArrangement = Arrangement.Start
             ) {
                 Text(
-                    text = "Invested $1000",  // Replace with real data if available
+                    text = coin.price_in_Dollers,  // Replace with real data if available
                     color = MaterialTheme.colorScheme.onBackground,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.weight(1f)
                 )
                 Text(
-                    text = "Returns $50",  // Replace with real data if available
+                    text = "Returns $${profit.toString().take(6)}",  // Replace with real data if available
                     color = MaterialTheme.colorScheme.onBackground,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Light,
@@ -137,34 +158,4 @@ fun Invest_Coin_Box(
             }
         }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun InvestCoinBoxPreview() {
-    val mockCoin = CoinX(
-        symbol = "BTC",
-        price = "50000.00",
-        name = "Bitcoin",
-        change = "+5.2%",
-        iconUrl = "https://www.example.com/bitcoin_icon.svg", // Replace with an actual URL or local image for testing
-        `24hVolume` = "100000000", // Mock volume (e.g., "100 million")
-        btcPrice = "50000.00", // Mock BTC price
-        coinrankingUrl = "https://www.coinranking.com", // Example URL
-        color = "#FF9900", // Example color in hex format
-        contractAddresses = listOf("0x12345"), // Example contract address, if applicable
-        listedAt = 1325416, // Example timestamp for when the coin was listed
-        lowVolume = false, // Example low volume flag
-        marketCap = "900000000000", // Example market cap in USD
-        rank = 1, // Rank of the coin (e.g., Bitcoin being rank 1)
-        sparkline = listOf(50000f, 51000f, 52000f, 51500f, 53000f), // Example sparkline data (price history)
-        tier = 1, // Example tier
-        uuid = "bitcoin-uuid" // Example unique identifier
-    )
-
-    // Display the Invest_Coin_Box with the mock data
-    Invest_Coin_Box(
-        coin = mockCoin,
-        modifier = Modifier.padding(16.dp)
-    )
 }

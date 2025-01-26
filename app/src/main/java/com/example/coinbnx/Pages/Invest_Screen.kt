@@ -27,9 +27,6 @@ import com.google.firebase.Firebase
 import com.google.firebase.database.database
 import dev.chrisbanes.haze.HazeState
 
-// Write a message to the database
-val database = Firebase.database
-val myRef = database.getReference()
 
 @Composable
 fun InvestScreen(
