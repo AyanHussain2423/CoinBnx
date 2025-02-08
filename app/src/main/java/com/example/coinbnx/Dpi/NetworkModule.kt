@@ -1,6 +1,7 @@
 package com.example.coinbnx.Dpi
 
 import com.example.coinbnx.Api.CoinApi
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import dagger.Module
@@ -34,5 +35,10 @@ object NetworkModule {
     @Singleton
     fun provideDatabaseReference(): DatabaseReference {
         return FirebaseDatabase.getInstance().reference
+    }
+    @Provides
+    @Singleton
+    fun privateAuthReferance(): FirebaseAuth{
+        return FirebaseAuth.getInstance()
     }
 }

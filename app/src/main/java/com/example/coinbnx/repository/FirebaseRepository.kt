@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.coinbnx.data.Firebase_Coin
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
@@ -15,7 +16,8 @@ import javax.inject.Singleton
 
 @Singleton
 class FirebaseRepository @Inject constructor(
-    private val database: DatabaseReference
+    private val database: DatabaseReference,
+    private val auth: FirebaseAuth
 ) {
 
 
@@ -23,7 +25,7 @@ class FirebaseRepository @Inject constructor(
         val coinNamesLiveData = MutableLiveData<List<String>>()
 
         // Access the "Coins" node, then the "Asset" child.
-        val coinsRef = database.child("Coins").child("Asset")
+        val coinsRef = database.child(auth.uid.toString()).child("Coins").child("Asset")
 
         coinsRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -51,6 +53,7 @@ class FirebaseRepository @Inject constructor(
         for (coin in coinNames) {
             try {
                 val snapshot = database
+                    .child(auth.uid.toString())
                     .child("Coins")
                     .child("Asset")
                     .child(coin)

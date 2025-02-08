@@ -32,6 +32,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.coinbnx.data.Firebase_Coin
 import com.example.coinbnx.ui.theme.CoinBnxTheme
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.coroutines.delay
@@ -45,6 +46,7 @@ enum class ConfirmationState {
 
 val database = FirebaseDatabase.getInstance()
 val myRef: DatabaseReference = database.getReference()
+private val auth: String = FirebaseAuth.getInstance().uid.toString()
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -72,7 +74,9 @@ fun ConfirmationButton(
     LaunchedEffect(progress.value) {
         if (progress.value >= 0.99f && !isLoading) {
             isLoading = true
-            myRef.child("Coins")
+            myRef
+                .child(auth)
+                .child("Coins")
                 .child("Asset")
                 .child(firebaseCoin.name)
                 .setValue(firebaseCoin)
